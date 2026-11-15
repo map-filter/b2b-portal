@@ -10,7 +10,6 @@ x-core: &core
   image: b2b-core:dev
   volumes:
     - ./core-laravel:/var/www/core
-  env_file: ./core-laravel/.env
   depends_on:
     postgres:
       condition: service_healthy
