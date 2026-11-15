@@ -4,7 +4,7 @@ export GID := $(shell id -g)
 DC = docker compose
 ART = $(DC) exec core php artisan
 
-.PHONY: up down build logs sh migrate fresh test pint go-test samples exchange-demo bot bot-test bot-demo
+.PHONY: up down build logs sh migrate fresh test pint go-test kaspi-test kaspi-sync samples exchange-demo bot bot-test bot-demo
 
 up:
 	$(DC) up -d --build
@@ -35,6 +35,12 @@ pint:
 
 go-test:
 	infra/go.sh vet ./... && infra/go.sh test ./...
+
+kaspi-test:
+	GO_DIR=kaspi-emu infra/go.sh vet ./... && GO_DIR=kaspi-emu infra/go.sh test ./...
+
+kaspi-sync:
+	$(ART) kaspi:sync --force
 
 samples:
 	infra/go.sh run ./cmd/gen -products $(or $(N),2000) -out /repo/infra/1c-samples

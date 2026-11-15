@@ -89,6 +89,20 @@ jobs:
       - run: go vet ./...
       - run: go test ./...
 
+  kaspi-emu:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: kaspi-emu
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: "1.23"
+          cache: false
+      - run: go vet ./...
+      - run: go test ./...
+
   bot:
     runs-on: ubuntu-latest
     defaults:
