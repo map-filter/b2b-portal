@@ -58,6 +58,8 @@ class OrderController extends Controller
             'comment' => ['nullable', 'string', 'max:255'],
         ]);
 
+        abort_if($order->source === 'kaspi', 422, 'Статус заказа Kaspi меняется в разделе Kaspi');
+
         $changeStatus->handle($order, OrderStatus::from($data['status']), $request->user(), $data['comment'] ?? null);
 
         return $this->show($order->refresh());

@@ -50,4 +50,4 @@ bot-test:
 	docker run --rm -v $(CURDIR)/bot-python:/app -w /app b2b-bot-test python -m pytest -q
 
 bot-demo:
-	docker run --rm -i --network b2b_default --env-file .env -e PORTAL_URL=http://nginx -v $(CURDIR)/bot-python:/app -w /app b2b-bot-test python -m bot.cli --email $(or $(EMAIL),buyer@energomontazh.demo)
+	docker run --rm -i --network $(or $(COMPOSE_PROJECT_NAME),b2b)_default --env-file .env -e PORTAL_URL=http://nginx -v $(CURDIR)/bot-python:/app -w /app b2b-bot-test python -m bot.cli --email $(or $(EMAIL),buyer@energomontazh.demo)

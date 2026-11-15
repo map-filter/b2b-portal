@@ -59,6 +59,14 @@ return [
         'bot_username' => env('TELEGRAM_BOT_USERNAME'),
     ],
 
+    'kaspi' => [
+        'url' => env('KASPI_API_URL', 'https://kaspi.kz/shop/api'),
+        'token' => env('KASPI_API_TOKEN'),
+        'pricelist_token' => env('KASPI_PRICELIST_TOKEN'),
+        'mode' => env('KASPI_MODE', 'one_c'),
+        'window_days' => (int) env('KASPI_WINDOW_DAYS', 14),
+    ],
+
     'integration' => [
         'token' => env('INTEGRATION_TOKEN'),
     ],
