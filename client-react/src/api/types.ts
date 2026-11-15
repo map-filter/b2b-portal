@@ -7,6 +7,7 @@ export interface User {
   phone: string | null
   role: Role
   role_label: string
+  telegram_linked: boolean
   company: Company | null
 }
 

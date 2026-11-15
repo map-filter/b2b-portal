@@ -6,6 +6,7 @@ export interface User {
   email: string
   role: 'admin' | 'manager' | 'client_admin' | 'client_buyer'
   role_label: string
+  telegram_linked: boolean
 }
 
 export interface Paginated<T> {

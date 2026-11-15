@@ -54,7 +54,7 @@ class PublishOrderEvents implements ShouldQueue
             'total' => (string) $order->total,
             'comment' => (string) $order->comment,
             'contract' => $order->contract->number,
-            'user' => ['id' => $order->user->id, 'name' => $order->user->name, 'email' => $order->user->email],
+            'user' => ['id' => $order->user->id, 'name' => $order->user->name, 'email' => $order->user->email, 'telegram_chat_id' => $order->user->telegram_chat_id],
             'company' => [
                 'id' => $order->company->id,
                 'external_id' => (string) $order->company->external_id,

@@ -8,6 +8,11 @@ x-core: &core
       UID: ${UID:-1000}
       GID: ${GID:-1000}
   image: b2b-core:dev
+  environment:
+    INTEGRATION_TOKEN: ${INTEGRATION_TOKEN:?заполните .env по .env.example}
+    TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+    TELEGRAM_BOT_USERNAME: ${TELEGRAM_BOT_USERNAME:-electroopt_demo_bot}
+    B24_WEBHOOK_URL: ${B24_WEBHOOK_URL:-}
   volumes:
     - ./core-laravel:/var/www/core
   depends_on:
@@ -115,9 +120,22 @@ services:
         condition: service_healthy
 
   bot:
-    profiles: [ai]
+    profiles: [bot]
     build: ./bot-python
-    depends_on: [core]
+    image: b2b-bot:dev
+    environment:
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      INTEGRATION_TOKEN: ${INTEGRATION_TOKEN}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      PORTAL_URL: http://nginx
+      CABINET_URL: ${CABINET_URL:-http://127.0.0.1:8201}
+      RABBITMQ_URL: amqp://b2b:b2b@rabbitmq:5672/
+    restart: unless-stopped
+    depends_on:
+      nginx:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
 
 volumes:
   pgdata:

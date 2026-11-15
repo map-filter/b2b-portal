@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { watch } from 'vue'
+import { ref, watch } from 'vue'
+import { api } from '../api/client'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
@@ -17,6 +18,14 @@ watch(
   () => auth.user,
   (user) => !user && router.push({ name: 'login' }),
 )
+
+const telegramLink = ref<string | null>(null)
+
+async function connectTelegram() {
+  const result = await api<{ url: string }>('/telegram/link', { method: 'POST' })
+  telegramLink.value = result.url
+  window.open(result.url, '_blank', 'noopener')
+}
 
 async function logout() {
   await auth.logout()
@@ -57,6 +66,13 @@ async function logout() {
         </label>
         <div class="hidden text-sm text-white lg:block">{{ auth.user?.name }}</div>
         <div class="hidden text-xs text-slate-500 lg:block">{{ auth.user?.role_label }}</div>
+        <div class="mt-3 hidden text-xs lg:block">
+          <span v-if="auth.user?.telegram_linked" class="text-emerald-400">✓ Заказы приходят в Telegram</span>
+          <button v-else class="text-brand-100 hover:text-white" @click="connectTelegram">Новые заказы в Telegram →</button>
+          <a v-if="telegramLink" :href="telegramLink" target="_blank" class="mt-1 block break-all text-slate-500">{{
+            telegramLink
+          }}</a>
+        </div>
         <button class="text-sm text-slate-400 hover:text-white lg:mt-3" @click="logout">Выйти</button>
       </div>
     </aside>

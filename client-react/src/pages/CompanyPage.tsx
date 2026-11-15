@@ -1,5 +1,7 @@
+import { useState } from 'react'
+import { api } from '../api/client'
 import { useAuth } from '../auth/context'
-import { Card } from '../components/ui'
+import { Button, Card } from '../components/ui'
 import { formatDate, formatMoney } from '../lib/format'
 
 export function CompanyPage() {
@@ -54,6 +56,8 @@ export function CompanyPage() {
         </Card>
       </div>
 
+      <TelegramCard linked={user.telegram_linked} />
+
       <Card className="p-5 text-sm">
         <h2 className="mb-2 font-semibold text-slate-800">Вы</h2>
         <p>
@@ -75,5 +79,52 @@ function Row({ label, value }: { label: string; value?: string | null }) {
       <span className="text-slate-500">{label}</span>
       <span className="text-right text-slate-800">{value ?? '-'}</span>
     </div>
+  )
+}
+
+function TelegramCard({ linked }: { linked: boolean }) {
+  const [link, setLink] = useState<string | null>(null)
+  const [isLinked, setLinked] = useState(linked)
+
+  const connect = async () => {
+    const result = await api<{ url: string }>('/telegram/link', { method: 'POST' })
+    setLink(result.url)
+    window.open(result.url, '_blank', 'noopener')
+  }
+
+  const disconnect = async () => {
+    await api('/telegram/link', { method: 'DELETE' })
+    setLinked(false)
+    setLink(null)
+  }
+
+  return (
+    <Card className="flex flex-wrap items-center gap-4 p-5 text-sm">
+      <div className="min-w-0 flex-1">
+        <h2 className="font-semibold text-slate-800">Telegram-бот</h2>
+        <p className="mt-1 text-slate-500">
+          Присылайте заявку текстом или фото списка: бот подберёт товары по вашим ценам и положит в корзину. Статусы заказов
+          придут туда же.
+        </p>
+        {link && (
+          <p className="mt-2 text-slate-600">
+            Ссылка действует 15 минут:{' '}
+            <a href={link} target="_blank" rel="noopener" className="text-brand-700 hover:underline">
+              {link}
+            </a>
+          </p>
+        )}
+      </div>
+      {isLinked ? (
+        <div className="flex items-center gap-3">
+          <span className="text-emerald-700">✓ Подключён</span>
+          <Button variant="secondary" onClick={disconnect}>
+            Отключить
+          </Button>
+        </div>
+      ) : (
+        <Button onClick={connect}>Подключить Telegram</Button>
+      )}
+    </Card>
   )
 }
