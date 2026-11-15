@@ -9,8 +9,9 @@ import (
 )
 
 var (
-	firstNames = []string{"Айгерим", "Ерлан", "Асель", "Нурлан", "Дана", "Арман", "Сауле", "Тимур", "Алия", "Марат", "Ольга", "Сергей", "Жанар", "Бауыржан", "Мадина", "Дмитрий", "Гульнара", "Ринат", "Камила", "Азамат"}
-	lastNames  = []string{"Сапарова", "Ахметов", "Иванова", "Нургалиев", "Ким", "Жумабаев", "Петрова", "Касымов", "Ермекова", "Смагулов", "Ли", "Беков", "Оспанова", "Ковалёв", "Тлеуова"}
+	maleNames   = []string{"Ерлан", "Нурлан", "Арман", "Тимур", "Марат", "Сергей", "Бауыржан", "Дмитрий", "Ринат", "Азамат"}
+	femaleNames = []string{"Айгерим", "Асель", "Дана", "Сауле", "Алия", "Ольга", "Жанар", "Мадина", "Гульнара", "Камила"}
+	lastNames   = []string{"Сапаров", "Ахметов", "Иванов", "Нургалиев", "Ким", "Жумабаев", "Петров", "Касымов", "Ермеков", "Смагулов", "Ли", "Беков", "Оспанов", "Ковалёв", "Тлеуов"}
 	streets    = []struct{ town, street string }{
 		{"г. Павлодар", "улица Академика Сатпаева"},
 		{"г. Павлодар", "улица Толстого"},
@@ -129,7 +130,7 @@ func (s *Store) generate(at time.Time, history bool) *Order {
 		return nil
 	}
 
-	first, last := firstNames[s.rnd.IntN(len(firstNames))], lastNames[s.rnd.IntN(len(lastNames))]
+	first, last := s.person()
 	n := s.nextID()
 	o := &Order{
 		ID:                 encodeID(n),
@@ -235,6 +236,20 @@ func (s *Store) generate(at time.Time, history bool) *Order {
 	s.st.Orders = append(s.st.Orders, o)
 	s.byID[o.ID] = o
 	return o
+}
+
+func (s *Store) person() (string, string) {
+	last := lastNames[s.rnd.IntN(len(lastNames))]
+	if s.rnd.IntN(2) == 0 {
+		return maleNames[s.rnd.IntN(len(maleNames))], last
+	}
+	for _, suffix := range []string{"ов", "ев", "ёв"} {
+		if strings.HasSuffix(last, suffix) {
+			last += "а"
+			break
+		}
+	}
+	return femaleNames[s.rnd.IntN(len(femaleNames))], last
 }
 
 func (s *Store) product(offer Offer) Entry {

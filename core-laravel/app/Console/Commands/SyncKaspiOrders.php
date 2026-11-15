@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Kaspi\KaspiSettings;
 use App\Services\Kaspi\KaspiSync;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
@@ -14,11 +13,11 @@ class SyncKaspiOrders extends Command
 {
     public function handle(KaspiSync $sync): int
     {
-        if (! $this->option('force') && ! $sync->due(KaspiSettings::current())) {
+        $run = $this->option('force') ? $sync->run() : $sync->runScheduled();
+
+        if (! $run) {
             return self::SUCCESS;
         }
-
-        $run = $sync->run($this->option('force') ? 'manual' : 'schedule');
 
         if ($run->error) {
             $this->error("Kaspi: {$run->error}");

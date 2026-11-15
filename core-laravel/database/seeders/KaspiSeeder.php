@@ -13,7 +13,6 @@ use App\Models\User;
 use App\Models\Warehouse;
 use App\Services\Kaspi\KaspiCoreOrders;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class KaspiSeeder extends Seeder
 {
@@ -21,11 +20,10 @@ class KaspiSeeder extends Seeder
     {
         mt_srand(11);
 
-        KaspiSettings::create([
+        KaspiSettings::current()->update([
             'mode' => config('services.kaspi.mode', KaspiMode::OneC->value),
             'merchant_id' => 'DEMO01',
             'company_name' => 'ЭлектроОпт (демо)',
-            'pricelist_token' => config('services.kaspi.pricelist_token') ?: Str::random(40),
             'price_type_id' => null,
             'notify_user_id' => User::where('email', 'manager@demo.kz')->value('id'),
             'poll_minutes' => 1,

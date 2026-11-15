@@ -30,7 +30,7 @@ class KaspiSettings extends Model
 
     public static function current(): self
     {
-        return self::query()->first() ?? self::create([
+        return self::query()->orderBy('id')->first() ?? self::create([
             'pricelist_token' => config('services.kaspi.pricelist_token') ?: Str::random(40),
             'company_name' => config('b2b.supplier.name'),
         ]);

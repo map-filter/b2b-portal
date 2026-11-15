@@ -22,9 +22,21 @@ class KaspiSync
             && (! $settings->last_synced_at || $settings->last_synced_at->diffInSeconds(now()) >= $settings->poll_minutes * 60 - 5);
     }
 
-    public function run(string $trigger = 'schedule'): KaspiSyncRun
+    public const LOCK = 'kaspi-sync';
+
+    public function run(string $trigger = 'manual'): KaspiSyncRun
     {
-        return Cache::lock('kaspi-sync', 300)->block(30, fn () => $this->locked($trigger));
+        return Cache::lock(self::LOCK, 300)->block(30, fn () => $this->locked($trigger));
+    }
+
+    /**
+     * Плановый запуск: если идёт ручная синхронизация или сброс демо, просто пропускаем минуту.
+     */
+    public function runScheduled(): ?KaspiSyncRun
+    {
+        $result = Cache::lock(self::LOCK, 300)->get(fn () => $this->due(KaspiSettings::current()) ? $this->locked('schedule') : null);
+
+        return $result ?: null;
     }
 
     private function locked(string $trigger): KaspiSyncRun

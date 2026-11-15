@@ -9,6 +9,6 @@ export default defineConfig({
   plugins: [vue(), tailwindcss()],
   server: {
     allowedHosts: true,
-    hmr: { clientPort: 8201 },
+    hmr: { clientPort: Number(process.env.VITE_HMR_PORT ?? 8201) },
   },
 })

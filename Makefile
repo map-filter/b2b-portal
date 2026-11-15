@@ -25,7 +25,7 @@ migrate:
 	$(ART) migrate
 
 fresh:
-	$(ART) migrate:fresh --seed
+	$(ART) demo:reset
 
 test:
 	$(DC) exec core php artisan test
