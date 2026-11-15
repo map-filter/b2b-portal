@@ -24,7 +24,7 @@ class ProductFactory extends Factory
             'brand' => fake()->randomElement(['ВольтПро', 'Светоч', 'КабельСтандарт']),
             'unit' => 'шт',
             'base_price' => fake()->randomFloat(2, 100, 50000),
-            'attributes' => [],
+            'specs' => [],
         ];
     }
 }

@@ -30,7 +30,7 @@ return new class extends Migration
             $table->unsignedInteger('min_quantity')->default(1);
             $table->unsignedInteger('pack_quantity')->default(1);
             $table->decimal('base_price', 14, 2);
-            $table->jsonb('attributes')->default('{}');
+            $table->jsonb('specs')->default('{}');
             $table->boolean('is_active')->default(true)->index();
             $table->string('external_id')->nullable()->unique();
             $table->timestamps();

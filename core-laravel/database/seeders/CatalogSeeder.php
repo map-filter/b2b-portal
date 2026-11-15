@@ -94,7 +94,7 @@ class CatalogSeeder extends Seeder
     }
 
     /**
-     * @param  array{name: string, brand: string, price: int|float, unit?: string, pack?: int, min?: int, attributes: array<string, mixed>, description?: string}  $item
+     * @param  array{name: string, brand: string, price: int|float, unit?: string, pack?: int, min?: int, specs: array<string, mixed>, description?: string}  $item
      */
     private function product(Category $category, array $item): Product
     {
@@ -111,7 +111,7 @@ class CatalogSeeder extends Seeder
             'min_quantity' => $item['min'] ?? 1,
             'pack_quantity' => $item['pack'] ?? 1,
             'base_price' => round($item['price'], 2),
-            'attributes' => $item['attributes'],
+            'specs' => $item['specs'],
         ]);
     }
 
@@ -154,7 +154,7 @@ class CatalogSeeder extends Seeder
                     'unit' => 'м',
                     'pack' => 100,
                     'min' => 100,
-                    'attributes' => ['Марка' => $mark, 'Сечение' => $section, 'Материал жилы' => 'медь', 'Бухта, м' => 100],
+                    'specs' => ['Марка' => $mark, 'Сечение' => $section, 'Материал жилы' => 'медь', 'Бухта, м' => 100],
                 ];
             }
         }
@@ -175,7 +175,7 @@ class CatalogSeeder extends Seeder
                     'unit' => 'м',
                     'pack' => 100,
                     'min' => 100,
-                    'attributes' => ['Марка' => $mark, 'Сечение' => $section, 'Материал жилы' => 'медь', 'Бухта, м' => 100],
+                    'specs' => ['Марка' => $mark, 'Сечение' => $section, 'Материал жилы' => 'медь', 'Бухта, м' => 100],
                 ];
             }
         }
@@ -195,7 +195,7 @@ class CatalogSeeder extends Seeder
                         'brand' => 'Модуль-Э',
                         'price' => (1650 + $current * 12) * $factor,
                         'pack' => 12,
-                        'attributes' => ['Полюсов' => $poles, 'Номинальный ток, А' => $current, 'Характеристика' => $curve, 'Отключающая способность, кА' => 4.5],
+                        'specs' => ['Полюсов' => $poles, 'Номинальный ток, А' => $current, 'Характеристика' => $curve, 'Отключающая способность, кА' => 4.5],
                     ];
                 }
             }
@@ -216,7 +216,7 @@ class CatalogSeeder extends Seeder
                         'brand' => 'Модуль-Э',
                         'price' => (7800 + $current * 45) * $factor,
                         'pack' => 6,
-                        'attributes' => ['Полюсов' => $poles, 'Номинальный ток, А' => $current, 'Ток утечки, мА' => $leak, 'Тип' => 'AC'],
+                        'specs' => ['Полюсов' => $poles, 'Номинальный ток, А' => $current, 'Ток утечки, мА' => $leak, 'Тип' => 'AC'],
                     ];
                 }
             }
@@ -235,7 +235,7 @@ class CatalogSeeder extends Seeder
                 'brand' => 'Модуль-Э',
                 'price' => 9400 + $current * 60,
                 'pack' => 6,
-                'attributes' => ['Полюсов' => '1P+N', 'Номинальный ток, А' => $current, 'Характеристика' => 'C', 'Ток утечки, мА' => 30],
+                'specs' => ['Полюсов' => '1P+N', 'Номинальный ток, А' => $current, 'Характеристика' => 'C', 'Ток утечки, мА' => 30],
             ];
         }
 
@@ -254,7 +254,7 @@ class CatalogSeeder extends Seeder
                         'brand' => 'ЭлектроДом',
                         'price' => $price * $factor,
                         'pack' => 10,
-                        'attributes' => ['Серия' => $series, 'Цвет' => $color, 'Исполнение' => $type, 'Монтаж' => 'скрытый'],
+                        'specs' => ['Серия' => $series, 'Цвет' => $color, 'Исполнение' => $type, 'Монтаж' => 'скрытый'],
                     ];
                 }
             }
@@ -275,7 +275,7 @@ class CatalogSeeder extends Seeder
                         'brand' => 'ЭлектроДом',
                         'price' => $price * $factor,
                         'pack' => 10,
-                        'attributes' => ['Серия' => $series, 'Цвет' => $color, 'Исполнение' => $type, 'Монтаж' => 'скрытый'],
+                        'specs' => ['Серия' => $series, 'Цвет' => $color, 'Исполнение' => $type, 'Монтаж' => 'скрытый'],
                     ];
                 }
             }
@@ -296,7 +296,7 @@ class CatalogSeeder extends Seeder
                         'brand' => 'Светоч',
                         'price' => 390 + $power * 38,
                         'pack' => 10,
-                        'attributes' => ['Цоколь' => explode(' ', $form)[1] ?? $form, 'Мощность, Вт' => $power, 'Цветовая температура, K' => $temp],
+                        'specs' => ['Цоколь' => explode(' ', $form)[1] ?? $form, 'Мощность, Вт' => $power, 'Цветовая температура, K' => $temp],
                     ];
                 }
             }
@@ -316,7 +316,7 @@ class CatalogSeeder extends Seeder
                     'brand' => 'Светоч',
                     'price' => $price,
                     'pack' => 4,
-                    'attributes' => ['Тип' => $type, 'Цветовая температура, K' => $temp],
+                    'specs' => ['Тип' => $type, 'Цветовая температура, K' => $temp],
                 ];
             }
         }
@@ -333,7 +333,7 @@ class CatalogSeeder extends Seeder
                 'name' => "Прожектор светодиодный СДО {$power} Вт 6500K IP65 (демо)",
                 'brand' => 'Светоч',
                 'price' => 1900 + $power * 95,
-                'attributes' => ['Мощность, Вт' => $power, 'Степень защиты' => 'IP65', 'Цветовая температура, K' => 6500],
+                'specs' => ['Мощность, Вт' => $power, 'Степень защиты' => 'IP65', 'Цветовая температура, K' => 6500],
             ];
         }
 
@@ -350,7 +350,7 @@ class CatalogSeeder extends Seeder
                     'name' => "Щит {$type} на {$modules} модулей (демо)",
                     'brand' => 'ВольтПро',
                     'price' => (2200 + $modules * 210) * $factor,
-                    'attributes' => ['Тип' => $type, 'Модулей' => $modules],
+                    'specs' => ['Тип' => $type, 'Модулей' => $modules],
                 ];
             }
         }
@@ -369,7 +369,7 @@ class CatalogSeeder extends Seeder
                     'brand' => 'ВольтПро',
                     'price' => 2100 + $outlets * 320 + $length * 260,
                     'pack' => 10,
-                    'attributes' => ['Гнёзд' => $outlets, 'Длина, м' => $length, 'Заземление' => 'да'],
+                    'specs' => ['Гнёзд' => $outlets, 'Длина, м' => $length, 'Заземление' => 'да'],
                 ];
             }
         }

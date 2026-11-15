@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['category_id', 'sku', 'name', 'slug', 'brand', 'description', 'unit', 'min_quantity', 'pack_quantity', 'base_price', 'attributes', 'is_active', 'external_id'])]
+#[Fillable(['category_id', 'sku', 'name', 'slug', 'brand', 'description', 'unit', 'min_quantity', 'pack_quantity', 'base_price', 'specs', 'is_active', 'external_id'])]
 class Product extends Model
 {
     /** @use HasFactory<ProductFactory> */
@@ -21,7 +21,7 @@ class Product extends Model
     {
         return [
             'base_price' => 'decimal:2',
-            'attributes' => 'array',
+            'specs' => 'array',
             'is_active' => 'boolean',
         ];
     }

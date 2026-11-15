@@ -16,6 +16,10 @@ class Company extends Model
     /** @use HasFactory<CompanyFactory> */
     use HasFactory;
 
+    protected $attributes = [
+        'is_active' => true,
+    ];
+
     protected function casts(): array
     {
         return [
