@@ -1,0 +1,111 @@
+name: b2b
+
+x-core: &core
+  build:
+    context: .
+    dockerfile: infra/php/Dockerfile
+    args:
+      UID: ${UID:-1000}
+      GID: ${GID:-1000}
+  image: b2b-core:dev
+  volumes:
+    - ./core-laravel:/var/www/core
+  env_file: ./core-laravel/.env
+  depends_on:
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_started
+    rabbitmq:
+      condition: service_healthy
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "127.0.0.1:${PORT_GATEWAY:-8201}:80"
+    volumes:
+      - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./core-laravel/public:/var/www/core/public:ro
+    depends_on: [core, client, manager]
+
+  core:
+    <<: *core
+
+  queue:
+    <<: *core
+    command: php artisan queue:work --tries=3 --backoff=10
+    restart: unless-stopped
+
+  client:
+    image: node:22-alpine
+    working_dir: /app
+    user: "${UID:-1000}:${GID:-1000}"
+    command: sh -c "npm install --no-audit --no-fund && npm run dev -- --host 0.0.0.0 --port 5173"
+    volumes:
+      - ./client-react:/app
+    ports:
+      - "127.0.0.1:${PORT_CLIENT:-8202}:5173"
+
+  manager:
+    image: node:22-alpine
+    working_dir: /app
+    user: "${UID:-1000}:${GID:-1000}"
+    command: sh -c "npm install --no-audit --no-fund && npm run dev -- --host 0.0.0.0 --port 5173"
+    volumes:
+      - ./manager-vue:/app
+    ports:
+      - "127.0.0.1:${PORT_MANAGER:-8203}:5173"
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: b2b
+      POSTGRES_USER: b2b
+      POSTGRES_PASSWORD: b2b
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "127.0.0.1:${PORT_POSTGRES:-8204}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U b2b -d b2b"]
+      interval: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: b2b
+      RABBITMQ_DEFAULT_PASS: b2b
+    ports:
+      - "127.0.0.1:${PORT_RABBIT_UI:-8205}:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      retries: 30
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "127.0.0.1:${PORT_MAIL:-8206}:8025"
+
+  exchange:
+    profiles: [w2]
+    build: ./exchange-go
+    ports:
+      - "127.0.0.1:${PORT_EXCHANGE:-8207}:8080"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  bot:
+    profiles: [ai]
+    build: ./bot-python
+    depends_on: [core]
+
+volumes:
+  pgdata:
