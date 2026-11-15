@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Эмулятор Kaspi API</title>
+<style>
+  :root { --red: #f14635; --ink: #1f2933; --muted: #6b7785; --line: #e4e7eb; --bg: #f5f6f8; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--ink); background: var(--bg); }
+  header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 14px 20px; background: #fff; border-bottom: 1px solid var(--line); }
+  .logo { display: flex; align-items: center; gap: 8px; font-weight: 700; }
+  .logo b { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: var(--red); color: #fff; }
+  .tag { font-size: 12px; color: var(--muted); }
+  .spacer { flex: 1; }
+  button { font: inherit; border: 0; border-radius: 8px; padding: 7px 12px; cursor: pointer; background: #fff; box-shadow: inset 0 0 0 1px #cbd2d9; }
+  button.primary { background: var(--red); color: #fff; box-shadow: none; }
+  button.small { padding: 3px 8px; font-size: 12px; }
+  main { max-width: 1200px; margin: 0 auto; padding: 18px 16px; display: grid; gap: 16px; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 0 0 1px var(--line); }
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .stat { padding: 14px 16px; }
+  .stat div:first-child { color: var(--muted); font-size: 12px; }
+  .stat div:last-child { font-size: 20px; font-weight: 600; margin-top: 2px; }
+  .err { color: #c0392b; font-size: 12px; margin-top: 4px; word-break: break-word; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); padding: 10px 12px; background: #fafbfc; }
+  td { padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+  .wrap { overflow-x: auto; }
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; background: #eef1f4; white-space: nowrap; }
+  .pill.NEW, .pill.SIGN_REQUIRED { background: #fdecea; color: #b42318; }
+  .pill.PICKUP, .pill.DELIVERY, .pill.KASPI_DELIVERY { background: #eaf2ff; color: #1d4ed8; }
+  .pill.ARCHIVE { background: #edf7ee; color: #166534; }
+  .code { font: 700 22px/1 ui-monospace, monospace; letter-spacing: 4px; color: var(--red); }
+  .muted { color: var(--muted); font-size: 12px; }
+  .events { margin: 4px 0 0; padding-left: 16px; color: var(--muted); font-size: 12px; }
+  h2 { font-size: 15px; margin: 0; padding: 14px 16px 6px; }
+  .phone { padding: 14px 16px; display: flex; flex-wrap: wrap; gap: 12px; }
+  .sms { border-radius: 14px; padding: 10px 14px; background: #fff6f5; box-shadow: inset 0 0 0 1px #f9c7c1; min-width: 200px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 4px; }
+  #toast { position: fixed; right: 16px; bottom: 16px; max-width: 360px; padding: 10px 14px; border-radius: 10px; background: var(--ink); color: #fff; display: none; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><b>K</b> Эмулятор Kaspi Магазина <span class="tag">демо, данные выдуманы</span></div>
+  <div class="spacer"></div>
+  <button class="primary" data-post="/emu/api/orders">Покупатель оформил заказ</button>
+  <button data-post="/emu/api/pricelist/reload">Забрать прайс-лист</button>
+  <button data-post="/emu/api/reset" data-confirm="Удалить все заказы эмулятора и создать историю заново?">Сброс</button>
+</header>
+<main>
+  <div class="grid">
+    <div class="card stat"><div>Прайс-лист продавца</div><div id="pl-offers">…</div><div class="muted" id="pl-info"></div><div class="err" id="pl-err"></div></div>
+    <div class="card stat"><div>Заказов в эмуляторе</div><div id="total">…</div><div class="muted">API: /shop/api/v2, заголовок X-Auth-Token</div></div>
+    <div class="card stat"><div>Ждут продавца</div><div id="waiting">…</div><div class="muted">состояние NEW</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Телефон покупателя: коды из приложения Kaspi.kz</h2>
+    <div class="phone" id="codes"><span class="muted">Код появится, когда продавец нажмёт «Отправить код» при выдаче заказа.</span></div>
+  </div>
+
+  <div class="card">
+    <h2>Последние заказы</h2>
+    <div class="wrap">
+      <table>
+        <thead><tr><th>Заказ</th><th>Покупатель</th><th>Состав</th><th>Доставка</th><th>Сумма</th><th>Состояние</th><th></th></tr></thead>
+        <tbody id="orders"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+<div id="toast"></div>
+<script>
+const modes = { DELIVERY_LOCAL: 'По городу', DELIVERY_PICKUP: 'Самовывоз', DELIVERY_REGIONAL_TODOOR: 'По области', DELIVERY_REGIONAL_PICKUP: 'Область, ПВЗ' }
+const fmt = new Intl.NumberFormat('ru-RU')
+const dt = (ms) => new Date(ms).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])
+
+function toast(text) {
+  const el = document.getElementById('toast')
+  el.textContent = text
+  el.style.display = 'block'
+  clearTimeout(toast.t)
+  toast.t = setTimeout(() => (el.style.display = 'none'), 3500)
+}
+
+async function post(url) {
+  const res = await fetch(url, { method: 'POST' })
+  const body = await res.json().catch(() => ({}))
+  toast(res.ok ? (body.code ? `Новый заказ ${body.code}` : 'Готово') : body.error || 'Ошибка')
+  load()
+}
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-post]')
+  if (!btn) return
+  if (btn.dataset.confirm && !confirm(btn.dataset.confirm)) return
+  post(btn.dataset.post)
+})
+
+async function load() {
+  const s = await (await fetch('/emu/api/state')).json()
+  const pl = s.priceList
+  document.getElementById('pl-offers').textContent = pl.offers ? `${pl.offers} товаров, в наличии ${pl.inStock}` : 'не загружен'
+  document.getElementById('pl-info').textContent = pl.loadedAt && !pl.loadedAt.startsWith('0001') ? `${pl.company || ''} · ${new Date(pl.loadedAt).toLocaleTimeString('ru-RU')}` : ''
+  document.getElementById('pl-err').textContent = pl.error ? `Последняя ошибка: ${pl.error}` : ''
+  document.getElementById('total').textContent = s.total
+  document.getElementById('waiting').textContent = s.orders.filter((o) => o.state === 'NEW').length
+
+  const codes = s.orders.filter((o) => o.securityCode)
+  document.getElementById('codes').innerHTML = codes.length
+    ? codes.map((o) => `<div class="sms"><div class="muted">Kaspi.kz · ${esc(o.customer.firstName)}</div>Код для получения заказа ${esc(o.code)}:<div class="code">${esc(o.securityCode)}</div></div>`).join('')
+    : '<span class="muted">Код появится, когда продавец нажмёт «Отправить код» при выдаче заказа.</span>'
+
+  document.getElementById('orders').innerHTML = s.orders.map((o) => {
+    const items = o.entries.map((e) => `${esc(e.name)} × ${e.quantity}`).join('<br>')
+    const last = (o.events || []).slice(-3).reverse().map((e) => `<li>${dt(e.at)} ${esc(e.text)}</li>`).join('')
+    const actions = []
+    if (!['COMPLETED', 'CANCELLED', 'RETURNED', 'KASPI_DELIVERY_RETURN_REQUESTED'].includes(o.status) && !o.courierTransmissionDate)
+      actions.push(`<button class="small" data-post="/emu/api/orders/${o.code}/cancel">Покупатель отменил</button>`)
+    if (o.status === 'COMPLETED' && o.isKaspiDelivery) actions.push(`<button class="small" data-post="/emu/api/orders/${o.code}/return">Оформить возврат</button>`)
+    if (o.status === 'KASPI_DELIVERY_RETURN_REQUESTED') actions.push(`<button class="small" data-post="/emu/api/orders/${o.code}/returned">Товар вернулся</button>`)
+    return `<tr>
+      <td><b>${esc(o.code)}</b><div class="muted">${dt(o.creationDate)}</div></td>
+      <td>${esc(o.customer.firstName)} ${esc(o.customer.lastName)}<div class="muted">+${esc(o.customer.cellPhone)}</div></td>
+      <td>${items}<ul class="events">${last}</ul></td>
+      <td>${modes[o.deliveryMode] || o.deliveryMode}${o.isKaspiDelivery ? '<div class="muted">Kaspi Доставка</div>' : ''}${o.waybillNumber ? `<div class="muted">${esc(o.waybillNumber)}</div>` : ''}</td>
+      <td style="white-space:nowrap">${fmt.format(o.totalPrice)} ₸</td>
+      <td><span class="pill ${o.state}">${o.state}</span><div class="muted">${o.status}</div></td>
+      <td><div class="actions">${actions.join('')}</div></td>
+    </tr>`
+  }).join('')
+}
+
+load()
+setInterval(load, 3000)
+</script>
+</body>
+</html>
