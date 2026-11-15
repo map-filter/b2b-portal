@@ -19,7 +19,7 @@ class KaspiSync
     public function due(KaspiSettings $settings): bool
     {
         return $settings->is_enabled
-            && (! $settings->last_synced_at || $settings->last_synced_at->diffInSeconds(now()) >= $settings->poll_minutes * 60 - 5);
+            && (! $settings->last_synced_at || $settings->last_synced_at->diffInSeconds(now()) >= $settings->poll_minutes * 60 - 20);
     }
 
     public const LOCK = 'kaspi-sync';
