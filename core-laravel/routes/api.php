@@ -6,8 +6,10 @@ use App\Http\Controllers\Api\CartImportController;
 use App\Http\Controllers\Api\Catalog\CategoryController;
 use App\Http\Controllers\Api\Catalog\ProductController;
 use App\Http\Controllers\Api\HealthController;
+use App\Http\Controllers\Api\Integration\BotController;
 use App\Http\Controllers\Api\Manager;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\TelegramLinkController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/health', HealthController::class);
@@ -16,6 +18,8 @@ Route::post('/auth/login', [AuthController::class, 'login'])->middleware('thrott
 
 Route::middleware(['auth:sanctum', 'active'])->group(function () {
     Route::get('/auth/me', [AuthController::class, 'me']);
+    Route::post('/telegram/link', [TelegramLinkController::class, 'store']);
+    Route::delete('/telegram/link', [TelegramLinkController::class, 'destroy']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 
     Route::prefix('catalog')->name('catalog.')->group(function () {
@@ -59,4 +63,13 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
         Route::put('/companies/{company}/prices/{product}', [Manager\ContractPriceController::class, 'upsert']);
         Route::delete('/companies/{company}/prices/{product}', [Manager\ContractPriceController::class, 'destroy']);
     });
+});
+
+Route::middleware('integration')->prefix('integration')->group(function () {
+    Route::post('/telegram/link', [BotController::class, 'link']);
+    Route::get('/telegram/users/{chatId}', [BotController::class, 'user'])->whereNumber('chatId');
+    Route::get('/users', [BotController::class, 'userByEmail']);
+    Route::post('/users/{user}/match', [BotController::class, 'match']);
+    Route::post('/users/{user}/cart', [BotController::class, 'addToCart']);
+    Route::get('/users/{user}/orders', [BotController::class, 'orders']);
 });

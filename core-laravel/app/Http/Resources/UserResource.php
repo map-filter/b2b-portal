@@ -18,6 +18,7 @@ class UserResource extends JsonResource
             'phone' => $this->phone,
             'role' => $this->role->value,
             'role_label' => $this->role->label(),
+            'telegram_linked' => (bool) $this->telegram_chat_id,
             'company' => $this->whenLoaded('company', fn () => $this->company ? [
                 'id' => $this->company->id,
                 'name' => $this->company->name,
