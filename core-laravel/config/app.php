@@ -67,6 +67,8 @@ return [
 
     'timezone' => 'UTC',
 
+    'demo_reset' => (bool) env('DEMO_RESET', false),
+
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration

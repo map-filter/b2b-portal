@@ -26,7 +26,7 @@ class ExchangeController extends Controller
                 'created_at' => $import->created_at->toIso8601String(),
             ]),
             'products_from_1c' => Product::whereNotNull('external_id')->count(),
-            'endpoint' => url('/1c_exchange.php'),
+            'endpoint' => rtrim(config('app.url'), '/').'/1c_exchange.php',
         ]);
     }
 }

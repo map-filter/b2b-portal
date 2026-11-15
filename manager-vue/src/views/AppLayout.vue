@@ -66,7 +66,7 @@ async function logout() {
         </label>
         <div class="hidden text-sm text-white lg:block">{{ auth.user?.name }}</div>
         <div class="hidden text-xs text-slate-500 lg:block">{{ auth.user?.role_label }}</div>
-        <div class="mt-3 hidden text-xs lg:block">
+        <div v-if="auth.user?.telegram_available" class="mt-3 hidden text-xs lg:block">
           <span v-if="auth.user?.telegram_linked" class="text-emerald-400">✓ Заказы приходят в Telegram</span>
           <button v-else class="text-brand-100 hover:text-white" @click="connectTelegram">Новые заказы в Telegram →</button>
           <a v-if="telegramLink" :href="telegramLink" target="_blank" class="mt-1 block break-all text-slate-500">{{

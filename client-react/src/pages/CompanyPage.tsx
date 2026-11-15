@@ -56,7 +56,7 @@ export function CompanyPage() {
         </Card>
       </div>
 
-      <TelegramCard linked={user.telegram_linked} />
+      {user.telegram_available && <TelegramCard linked={user.telegram_linked} />}
 
       <Card className="p-5 text-sm">
         <h2 className="mb-2 font-semibold text-slate-800">Вы</h2>

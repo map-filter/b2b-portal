@@ -56,7 +56,7 @@ return [
 
     'telegram' => [
         'token' => env('TELEGRAM_BOT_TOKEN'),
-        'bot_username' => env('TELEGRAM_BOT_USERNAME', 'electroopt_demo_bot'),
+        'bot_username' => env('TELEGRAM_BOT_USERNAME'),
     ],
 
     'integration' => [

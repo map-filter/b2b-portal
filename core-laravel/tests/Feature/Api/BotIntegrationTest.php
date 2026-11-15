@@ -13,13 +13,22 @@ class BotIntegrationTest extends ApiTestCase
     {
         parent::setUp();
 
-        config(['services.integration.token' => 'test-token']);
+        config(['services.integration.token' => 'test-token', 'services.telegram.token' => '123:abc', 'services.telegram.bot_username' => 'portal_test_bot']);
     }
 
     public function test_integration_api_requires_token(): void
     {
         $this->getJson('/api/integration/telegram/users/1')->assertUnauthorized();
         $this->withToken('wrong')->getJson('/api/integration/telegram/users/1')->assertUnauthorized();
+    }
+
+    public function test_link_is_unavailable_without_bot(): void
+    {
+        config(['services.telegram.token' => null]);
+        Sanctum::actingAs($this->buyer());
+
+        $this->postJson('/api/telegram/link')->assertNotFound();
+        $this->getJson('/api/auth/me')->assertJsonPath('data.telegram_available', false);
     }
 
     public function test_link_code_binds_chat_once(): void

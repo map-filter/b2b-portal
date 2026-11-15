@@ -1,3 +1,4 @@
+const API_BASE = `${import.meta.env.VITE_APP_BASE ?? '/'}api`
 const TOKEN_KEY = 'b2b.manager.token'
 
 export class ApiError extends Error {
@@ -43,7 +44,7 @@ export async function api<T>(path: string, options: RequestInit & { json?: unkno
     body = JSON.stringify(options.json)
   }
 
-  const response = await fetch(`/api${path}`, { ...options, headers, body })
+  const response = await fetch(`${API_BASE}${path}`, { ...options, headers, body })
 
   if (response.status === 401) {
     tokenStore.clear()
@@ -59,7 +60,7 @@ export async function api<T>(path: string, options: RequestInit & { json?: unkno
 }
 
 export async function download(path: string, filename: string) {
-  const response = await fetch(`/api${path}`, { headers: { Authorization: `Bearer ${tokenStore.get()}` } })
+  const response = await fetch(`${API_BASE}${path}`, { headers: { Authorization: `Bearer ${tokenStore.get()}` } })
   if (!response.ok) throw new ApiError(response.status, 'Не удалось скачать файл')
   const url = URL.createObjectURL(await response.blob())
   Object.assign(document.createElement('a'), { href: url, download: filename }).click()

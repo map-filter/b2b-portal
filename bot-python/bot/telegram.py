@@ -14,8 +14,8 @@ router = Router()
 
 HELP = (
     "Пришлите заявку текстом или фото списка, я подберу товары по вашим ценам и положу их в корзину.\n\n"
-    "Например:\n<code>ВВГнг 3х2,5 — 200 м\nавтомат С16 1P — 12 шт\nлампа E27 10 Вт 4000K — 50 шт</code>\n\n"
-    "/orders — последние заказы и статусы"
+    "Например:\n<code>ВВГнг 3х2,5 - 200 м\nавтомат С16 1P - 12 шт\nлампа E27 10 Вт 4000K - 50 шт</code>\n\n"
+    "/orders: последние заказы и статусы"
 )
 
 
@@ -59,7 +59,7 @@ async def orders(message: Message, portal: PortalClient) -> None:
     if not items:
         await message.answer("Заказов пока нет.")
         return
-    lines = [f"• <b>{escape(o['number'])}</b> — {escape(o['status_label'])}, {float(o['total']):,.0f} ₸".replace(",", " ") for o in items]
+    lines = [f"• <b>{escape(o['number'])}</b>: {escape(o["status_label"])}, {float(o['total']):,.0f} ₸".replace(",", " ") for o in items]
     await message.answer("Последние заказы:\n" + "\n".join(lines))
 
 

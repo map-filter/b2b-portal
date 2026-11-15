@@ -15,6 +15,8 @@ class TelegramLinkController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        abort_unless(filled(config('services.telegram.token')) && filled(config('services.telegram.bot_username')), 404, 'Telegram-бот не подключён');
+
         $code = Str::lower(Str::random(24));
         Cache::put("telegram-link:{$code}", $request->user()->id, now()->addMinutes(15));
 

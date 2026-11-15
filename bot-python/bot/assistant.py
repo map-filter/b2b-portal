@@ -20,7 +20,7 @@ class AssistantResult:
         if self.added:
             parts.append(f"✅ <b>Добавил в корзину: {len(self.added)}</b>")
             for item in self.added:
-                line = f"• {escape(item['name'])} × {item['quantity']} {escape(item['unit'])} — {_money(item['price'])}/{escape(item['unit'])}"
+                line = f"• {escape(item['name'])} × {item['quantity']} {escape(item['unit'])}, {_money(item['price'])}/{escape(item['unit'])}"
                 if item["quantity"] != item["requested"]:
                     line += f" <i>(мин. партия {item['quantity']})</i>"
                 parts.append(line)

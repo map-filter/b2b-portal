@@ -9,9 +9,13 @@ x-core: &core
       GID: ${GID:-1000}
   image: b2b-core:dev
   environment:
+    APP_ENV: ${APP_ENV:-local}
+    APP_DEBUG: ${APP_DEBUG:-true}
+    APP_URL: ${APP_URL:-http://127.0.0.1:8201}
+    DEMO_RESET: ${DEMO_RESET:-false}
     INTEGRATION_TOKEN: ${INTEGRATION_TOKEN:?заполните .env по .env.example}
     TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
-    TELEGRAM_BOT_USERNAME: ${TELEGRAM_BOT_USERNAME:-electroopt_demo_bot}
+    TELEGRAM_BOT_USERNAME: ${TELEGRAM_BOT_USERNAME:-}
     B24_WEBHOOK_URL: ${B24_WEBHOOK_URL:-}
   volumes:
     - ./core-laravel:/var/www/core
@@ -41,6 +45,11 @@ services:
     command: php artisan queue:work --tries=3 --backoff=10
     restart: unless-stopped
 
+  scheduler:
+    <<: *core
+    command: php artisan schedule:work
+    restart: unless-stopped
+
   consumer:
     <<: *core
     command: php artisan exchange:consume
@@ -65,6 +74,21 @@ services:
       - ./manager-vue:/app
     ports:
       - "127.0.0.1:${PORT_MANAGER:-8203}:5173"
+
+  web:
+    profiles: [demo]
+    build:
+      context: .
+      dockerfile: infra/web/Dockerfile
+      args:
+        VITE_APP_BASE: ${PUBLIC_BASE:-/}
+    image: b2b-web:demo
+    volumes:
+      - ./core-laravel/public:/var/www/core/public:ro
+    ports:
+      - "127.0.0.1:${PORT_WEB:-8208}:80"
+    restart: unless-stopped
+    depends_on: [core]
 
   postgres:
     image: postgres:16-alpine

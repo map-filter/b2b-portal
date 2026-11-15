@@ -19,6 +19,7 @@ class UserResource extends JsonResource
             'role' => $this->role->value,
             'role_label' => $this->role->label(),
             'telegram_linked' => (bool) $this->telegram_chat_id,
+            'telegram_available' => filled(config('services.telegram.token')) && filled(config('services.telegram.bot_username')),
             'company' => $this->whenLoaded('company', fn () => $this->company ? [
                 'id' => $this->company->id,
                 'name' => $this->company->name,
