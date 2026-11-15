@@ -36,11 +36,11 @@ class ProductController extends Controller
             ->with('category')
             ->withSum('stocks as stock_total', 'quantity');
 
-        match ($request->input('sort', 'name')) {
+        match ($request->input('sort', 'sku')) {
             'price_asc' => $query->orderBy('base_price'),
             'price_desc' => $query->orderByDesc('base_price'),
-            'sku' => $query->orderBy('sku'),
-            default => $query->orderBy('name'),
+            'name' => $query->orderBy('name'),
+            default => $query->orderBy('sku'),
         };
 
         $page = $query->paginate($request->integer('per_page', 24))->withQueryString();
