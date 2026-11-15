@@ -20,7 +20,7 @@ class AssistantResult:
         if self.added:
             parts.append(f"✅ <b>Добавил в корзину: {len(self.added)}</b>")
             for item in self.added:
-                line = f"• {escape(item['name'])} × {item['quantity']} {escape(item['unit'])}, {_money(item['price'])}/{escape(item['unit'])}"
+                line = f"• {escape(item['name'])} × {item['quantity']} {escape(item['unit'])}, {money(item['price'])}/{escape(item['unit'])}"
                 if item["quantity"] != item["requested"]:
                     line += f" <i>(мин. партия {item['quantity']})</i>"
                 parts.append(line)
@@ -31,7 +31,7 @@ class AssistantResult:
             parts.append("\n❓ <b>Не нашёл, уточните:</b>")
             parts.extend(f"• {escape(query)}" for query in self.not_found)
         if self.cart:
-            parts.append(f"\n🛒 В корзине {self.cart['count']} поз. на {_money(self.cart['total'])}")
+            parts.append(f"\n🛒 В корзине {self.cart['count']} поз. на {money(self.cart['total'])}")
             parts.append(f'<a href="{escape(self.cart["url"])}">Открыть корзину и оформить</a>')
         return "\n".join(parts)
 
@@ -69,5 +69,5 @@ class OrderAssistant:
         return result
 
 
-def _money(value: str | float) -> str:
+def money(value: str | float) -> str:
     return f"{float(value):,.2f}".replace(",", " ").replace(".", ",") + " ₸"

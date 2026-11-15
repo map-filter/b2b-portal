@@ -2,7 +2,7 @@ import json
 
 import httpx
 
-from bot.assistant import OrderAssistant
+from bot.assistant import OrderAssistant, money
 from bot.events import status_message
 from bot.parsing import RegexParser
 from bot.portal import PortalClient
@@ -58,3 +58,7 @@ def test_status_message_only_for_linked_users():
     text = status_message(event, "http://cabinet/")
     assert "🚚" in text and "отгружен" in text and "&lt;в пути&gt;" in text and "http://cabinet/orders/5" in text
     assert status_message({**event, "user": {"telegram_chat_id": None}}, "http://cabinet") is None
+
+
+def test_money_format():
+    assert money("1234567.5") == "1 234 567,50 ₸"

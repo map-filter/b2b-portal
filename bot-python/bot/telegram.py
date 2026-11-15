@@ -5,7 +5,7 @@ from aiogram import Bot, F, Router
 from aiogram.filters import Command, CommandObject, CommandStart
 from aiogram.types import Message
 
-from .assistant import OrderAssistant
+from .assistant import OrderAssistant, money
 from .parsing import ParseError
 from .portal import PortalClient, PortalError
 
@@ -59,7 +59,7 @@ async def orders(message: Message, portal: PortalClient) -> None:
     if not items:
         await message.answer("Заказов пока нет.")
         return
-    lines = [f"• <b>{escape(o['number'])}</b>: {escape(o["status_label"])}, {float(o['total']):,.0f} ₸".replace(",", " ") for o in items]
+    lines = [f"• <b>{escape(o['number'])}</b>: {escape(o['status_label'])}, {money(o['total'])}" for o in items]
     await message.answer("Последние заказы:\n" + "\n".join(lines))
 
 
