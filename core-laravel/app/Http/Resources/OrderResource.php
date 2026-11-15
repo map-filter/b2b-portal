@@ -16,6 +16,10 @@ class OrderResource extends JsonResource
             'number' => $this->number,
             'status' => $this->status->value,
             'status_label' => $this->status->label(),
+            'next_statuses' => $this->when($request->user()?->isStaff(), fn () => array_map(
+                fn ($status) => ['value' => $status->value, 'label' => $status->label()],
+                $this->status->next(),
+            )),
             'total' => $this->total,
             'items_count' => $this->items_count ?? $this->whenLoaded('items', fn () => $this->items->count()),
             'comment' => $this->comment,
@@ -24,6 +28,7 @@ class OrderResource extends JsonResource
             'created_at' => $this->created_at->toIso8601String(),
             'author' => $this->whenLoaded('user', fn () => $this->user->name),
             'company' => $this->whenLoaded('company', fn () => ['id' => $this->company->id, 'name' => $this->company->name]),
+            'crm_deal_id' => $this->when($request->user()?->isStaff(), $this->crm_deal_id),
             'contract' => $this->whenLoaded('contract', fn () => $this->contract->number),
             'items' => $this->whenLoaded('items', fn () => $this->items->map(fn ($item) => [
                 'product_id' => $item->product_id,

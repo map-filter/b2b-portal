@@ -16,14 +16,13 @@ class PriceResolver
      * @param  Collection<int, Product>  $products
      * @return Collection<int, string>
      */
-    public function forContract(Contract $contract, Collection $products): Collection
+    public function forContract(Contract $contract, Collection $products, bool $withContractPrices = true): Collection
     {
         $ids = $products->pluck('id');
 
-        $contractPrices = ContractPrice::query()
-            ->where('contract_id', $contract->id)
-            ->whereIn('product_id', $ids)
-            ->pluck('price', 'product_id');
+        $contractPrices = $withContractPrices
+            ? ContractPrice::query()->where('contract_id', $contract->id)->whereIn('product_id', $ids)->pluck('price', 'product_id')
+            : collect();
 
         $typePrices = ProductPrice::query()
             ->where('price_type_id', $contract->price_type_id)

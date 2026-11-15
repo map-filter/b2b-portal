@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\CartImportController;
 use App\Http\Controllers\Api\Catalog\CategoryController;
 use App\Http\Controllers\Api\Catalog\ProductController;
 use App\Http\Controllers\Api\HealthController;
+use App\Http\Controllers\Api\Manager;
 use App\Http\Controllers\Api\OrderController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,5 +38,24 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
         Route::get('/orders/{order}', [OrderController::class, 'show']);
         Route::post('/orders/{order}/repeat', [OrderController::class, 'repeat']);
         Route::get('/orders/{order}/invoice', [OrderController::class, 'invoice']);
+    });
+
+    Route::middleware('staff')->prefix('manager')->name('manager.')->group(function () {
+        Route::get('/dashboard', [Manager\ReportController::class, 'dashboard']);
+
+        Route::get('/orders', [Manager\OrderController::class, 'index']);
+        Route::get('/orders/{order}', [Manager\OrderController::class, 'show']);
+        Route::patch('/orders/{order}/status', [Manager\OrderController::class, 'updateStatus']);
+        Route::get('/orders/{order}/invoice', [OrderController::class, 'invoice']);
+
+        Route::get('/companies', [Manager\CompanyController::class, 'index']);
+        Route::get('/companies/{company}', [Manager\CompanyController::class, 'show']);
+        Route::put('/companies/{company}', [Manager\CompanyController::class, 'update']);
+        Route::post('/companies/{company}/users', [Manager\CompanyController::class, 'storeUser']);
+        Route::patch('/companies/{company}/users/{user}/toggle', [Manager\CompanyController::class, 'toggleUser']);
+
+        Route::get('/companies/{company}/prices', [Manager\ContractPriceController::class, 'index']);
+        Route::put('/companies/{company}/prices/{product}', [Manager\ContractPriceController::class, 'upsert']);
+        Route::delete('/companies/{company}/prices/{product}', [Manager\ContractPriceController::class, 'destroy']);
     });
 });
