@@ -42,4 +42,25 @@ return [
         'password' => env('RABBITMQ_PASSWORD', 'guest'),
     ],
 
+    'bitrix24' => [
+        'webhook' => env('B24_WEBHOOK_URL'),
+        'stages' => [
+            'new' => env('B24_STAGE_NEW', 'NEW'),
+            'confirmed' => env('B24_STAGE_CONFIRMED', 'PREPARATION'),
+            'assembling' => env('B24_STAGE_ASSEMBLING', 'EXECUTING'),
+            'shipped' => env('B24_STAGE_SHIPPED', 'FINAL_INVOICE'),
+            'completed' => env('B24_STAGE_COMPLETED', 'WON'),
+            'cancelled' => env('B24_STAGE_CANCELLED', 'LOSE'),
+        ],
+    ],
+
+    'telegram' => [
+        'token' => env('TELEGRAM_BOT_TOKEN'),
+        'bot_username' => env('TELEGRAM_BOT_USERNAME', 'electroopt_demo_bot'),
+    ],
+
+    'integration' => [
+        'token' => env('INTEGRATION_TOKEN'),
+    ],
+
 ];

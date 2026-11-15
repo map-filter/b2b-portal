@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Listeners\PublishOrderEvents;
+use App\Listeners\SyncOrderToBitrix24;
 use App\Services\Messaging\MessageBus;
 use App\Services\Messaging\RabbitMq;
 use Illuminate\Support\Facades\Event;
@@ -18,5 +19,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Event::subscribe(PublishOrderEvents::class);
+        Event::subscribe(SyncOrderToBitrix24::class);
     }
 }
