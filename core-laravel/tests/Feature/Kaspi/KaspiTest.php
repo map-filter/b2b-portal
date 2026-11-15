@@ -160,6 +160,7 @@ class KaspiTest extends ApiTestCase
 
         $this->postJson("/api/manager/kaspi/orders/{$order->id}/accept")->assertOk()->assertJsonPath('data.core_order', null);
         $this->assertSame(6.0, $this->stockOf($this->cable));
+        $this->assertSame(10.0, $this->stockOf($this->switch));
         $this->assertSame(0, Order::count(), 'без 1С заказ в обмен не уходит');
 
         $this->postJson("/api/manager/kaspi/orders/{$order->id}/cancel", ['reason' => 'MERCHANT_OUT_OF_STOCK'])
@@ -230,6 +231,7 @@ class KaspiTest extends ApiTestCase
 
         $this->patchJson("/api/manager/kaspi/products/{$link->id}", ['stocks' => ['PP1' => 3], 'price' => 1990])->assertOk();
         $this->assertSame(3.0, $this->stockOf($this->cable));
+        $this->assertSame(10.0, $this->stockOf($this->switch), 'остаток другого товара не должен меняться');
 
         $csv = UploadedFile::fake()->createWithContent('kaspi.csv', "Артикул;Цена;Остаток\nCAB-1;2100;7\nNEW-7;500;2\nNOPE;1;1\nSW-1;-5;1\n");
         $this->post('/api/manager/kaspi/products/import', ['file' => $csv])

@@ -48,7 +48,11 @@ class KaspiStock
 
     public function set(int $productId, int $warehouseId, float $quantity): void
     {
-        Stock::updateOrCreate(['product_id' => $productId, 'warehouse_id' => $warehouseId], ['quantity' => max($quantity, 0)]);
+        DB::table('stocks')->upsert(
+            [['product_id' => $productId, 'warehouse_id' => $warehouseId, 'quantity' => max($quantity, 0), 'updated_at' => now()]],
+            ['product_id', 'warehouse_id'],
+            ['quantity', 'updated_at'],
+        );
     }
 
     private function move(KaspiOrder $order, int $sign): void
@@ -60,10 +64,9 @@ class KaspiStock
                     continue;
                 }
 
-                $stock = Stock::where('product_id', $entry->product_id)->where('warehouse_id', $warehouse)->lockForUpdate()->first();
-                $quantity = max(0, (float) ($stock?->quantity ?? 0) + $sign * $entry->quantity);
+                $current = Stock::where('product_id', $entry->product_id)->where('warehouse_id', $warehouse)->lockForUpdate()->value('quantity');
 
-                Stock::updateOrCreate(['product_id' => $entry->product_id, 'warehouse_id' => $warehouse], ['quantity' => $quantity]);
+                $this->set($entry->product_id, $warehouse, (float) ($current ?? 0) + $sign * $entry->quantity);
             }
         });
     }
