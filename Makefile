@@ -4,7 +4,7 @@ export GID := $(shell id -g)
 DC = docker compose
 ART = $(DC) exec core php artisan
 
-.PHONY: up down build logs sh migrate fresh test pint w2
+.PHONY: up down build logs sh migrate fresh test pint go-test samples exchange-demo
 
 up:
 	$(DC) up -d --build
@@ -33,5 +33,11 @@ test:
 pint:
 	$(DC) exec core ./vendor/bin/pint
 
-w2:
-	$(DC) --profile w2 up -d --build
+go-test:
+	infra/go.sh vet ./... && infra/go.sh test ./...
+
+samples:
+	infra/go.sh run ./cmd/gen -products $(or $(N),2000) -out /repo/infra/1c-samples
+
+exchange-demo:
+	infra/exchange-demo.sh

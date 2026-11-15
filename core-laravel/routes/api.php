@@ -42,6 +42,7 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
 
     Route::middleware('staff')->prefix('manager')->name('manager.')->group(function () {
         Route::get('/dashboard', [Manager\ReportController::class, 'dashboard']);
+        Route::get('/exchange/imports', [Manager\ExchangeController::class, 'imports']);
 
         Route::get('/orders', [Manager\OrderController::class, 'index']);
         Route::get('/orders/{order}', [Manager\OrderController::class, 'show']);

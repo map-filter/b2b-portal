@@ -46,6 +46,19 @@ class ManagerTest extends ApiTestCase
         Event::assertDispatched(OrderStatusChanged::class, fn ($event) => $event->from === OrderStatus::New);
     }
 
+    public function test_order_events_are_published_to_bus(): void
+    {
+        $orderId = $this->placeOrder();
+        Sanctum::actingAs($this->manager);
+        $this->patchJson("/api/manager/orders/{$orderId}/status", ['status' => 'confirmed'])->assertOk();
+
+        $this->assertSame(['order.created', 'order.status_changed'], $this->bus->keys());
+        $created = $this->bus->published[0]['payload'];
+        $this->assertSame('new', $created['status']);
+        $this->assertCount(1, $created['items']);
+        $this->assertSame('new', $this->bus->published[1]['payload']['previous_status']);
+    }
+
     public function test_mine_filter_limits_to_managed_companies(): void
     {
         $this->placeOrder($this->clientCompany(['manager_id' => $this->manager->id]));

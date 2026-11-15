@@ -10,6 +10,7 @@ const links = [
   { to: { name: 'dashboard' }, label: 'Сводка', icon: '◔' },
   { to: { name: 'orders' }, label: 'Заказы', icon: '☰' },
   { to: { name: 'companies' }, label: 'Клиенты', icon: '◫' },
+  { to: { name: 'exchange' }, label: 'Обмен с 1С', icon: '⇄' },
 ]
 
 watch(

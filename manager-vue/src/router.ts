@@ -14,6 +14,7 @@ export const router = createRouter({
         { path: 'orders/:id', name: 'order', component: () => import('./views/OrderView.vue'), props: true },
         { path: 'companies', name: 'companies', component: () => import('./views/CompaniesView.vue') },
         { path: 'companies/:id', name: 'company', component: () => import('./views/CompanyView.vue'), props: true },
+        { path: 'exchange', name: 'exchange', component: () => import('./views/ExchangeView.vue') },
       ],
     },
     { path: '/:pathMatch(.*)*', redirect: '/' },

@@ -48,6 +48,6 @@ class Product extends Model
 
     public function scopeActive(Builder $query): void
     {
-        $query->where('is_active', true);
+        $query->where('is_active', true)->where('base_price', '>', 0);
     }
 }

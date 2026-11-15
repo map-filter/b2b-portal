@@ -26,7 +26,7 @@ services:
     volumes:
       - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       - ./core-laravel/public:/var/www/core/public:ro
-    depends_on: [core, client, manager]
+    depends_on: [core, client, manager, exchange]
 
   core:
     <<: *core
@@ -34,6 +34,11 @@ services:
   queue:
     <<: *core
     command: php artisan queue:work --tries=3 --backoff=10
+    restart: unless-stopped
+
+  consumer:
+    <<: *core
+    command: php artisan exchange:consume
     restart: unless-stopped
 
   client:
@@ -93,8 +98,16 @@ services:
       - "127.0.0.1:${PORT_MAIL:-8206}:8025"
 
   exchange:
-    profiles: [w2]
     build: ./exchange-go
+    image: b2b-exchange:dev
+    environment:
+      RABBITMQ_URL: amqp://b2b:b2b@rabbitmq:5672/
+      EXCHANGE_LOGIN: ${EXCHANGE_LOGIN:-1c}
+      EXCHANGE_PASSWORD: ${EXCHANGE_PASSWORD:-demo1c}
+      EXCHANGE_UPLOAD_DIR: /data
+    volumes:
+      - exchange-data:/data
+    restart: unless-stopped
     ports:
       - "127.0.0.1:${PORT_EXCHANGE:-8207}:8080"
     depends_on:
@@ -108,3 +121,4 @@ services:
 
 volumes:
   pgdata:
+  exchange-data:
