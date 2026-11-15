@@ -35,7 +35,7 @@ jobs:
       REDIS_HOST: 127.0.0.1
       RABBITMQ_HOST: 127.0.0.1
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: shivammathur/setup-php@v2
         with:
           php-version: "8.4"
@@ -52,8 +52,8 @@ jobs:
       run:
         working-directory: client-react
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       - run: npm install --no-audit --no-fund
@@ -67,8 +67,8 @@ jobs:
       run:
         working-directory: manager-vue
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       - run: npm install --no-audit --no-fund
@@ -81,10 +81,11 @@ jobs:
       run:
         working-directory: exchange-go
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
         with:
           go-version: "1.23"
+          cache-dependency-path: exchange-go/go.sum
       - run: go vet ./...
       - run: go test ./...
 
@@ -94,8 +95,8 @@ jobs:
       run:
         working-directory: bot-python
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - run: pip install -r requirements-dev.txt
