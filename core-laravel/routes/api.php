@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\CartImportController;
 use App\Http\Controllers\Api\Catalog\CategoryController;
 use App\Http\Controllers\Api\Catalog\ProductController;
 use App\Http\Controllers\Api\HealthController;
@@ -28,10 +29,13 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
         Route::put('/cart/items/{product}', [CartController::class, 'put']);
         Route::delete('/cart/items/{product}', [CartController::class, 'remove']);
         Route::delete('/cart', [CartController::class, 'clear']);
+        Route::post('/cart/import', [CartImportController::class, 'store']);
+        Route::get('/cart/import/template', [CartImportController::class, 'template']);
 
         Route::get('/orders', [OrderController::class, 'index']);
         Route::post('/orders', [OrderController::class, 'store']);
         Route::get('/orders/{order}', [OrderController::class, 'show']);
         Route::post('/orders/{order}/repeat', [OrderController::class, 'repeat']);
+        Route::get('/orders/{order}/invoice', [OrderController::class, 'invoice']);
     });
 });

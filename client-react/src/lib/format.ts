@@ -1,7 +1,18 @@
-const money = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'KZT', currencyDisplay: 'narrowSymbol', maximumFractionDigits: 2 })
+const money = new Intl.NumberFormat('ru-RU', {
+  style: 'currency',
+  currency: 'KZT',
+  currencyDisplay: 'narrowSymbol',
+  maximumFractionDigits: 2,
+})
 const number = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 3 })
 const date = new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' })
-const dateTime = new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+const dateTime = new Intl.DateTimeFormat('ru-RU', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+})
 
 export const formatMoney = (value: string | number) => money.format(Number(value))
 export const formatNumber = (value: number) => number.format(value)

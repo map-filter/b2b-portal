@@ -31,7 +31,10 @@ export function CompanyPage() {
           ) : (
             <p className="text-slate-500">Нет действующего договора</p>
           )}
-          <Row label="Кредитный лимит" value={Number(company.credit_limit) > 0 ? formatMoney(company.credit_limit) : 'предоплата'} />
+          <Row
+            label="Кредитный лимит"
+            value={Number(company.credit_limit) > 0 ? formatMoney(company.credit_limit) : 'предоплата'}
+          />
           <Row label="Отсрочка" value={company.payment_delay_days ? `${company.payment_delay_days} дн.` : 'нет'} />
         </Card>
 
@@ -57,7 +60,9 @@ export function CompanyPage() {
           {user.name}, {user.role_label.toLowerCase()} · {user.email}
         </p>
         <p className="mt-1 text-slate-500">
-          {user.role === 'client_admin' ? 'Видите все заказы компании.' : 'Видите свои заказы. Все заказы компании видит руководитель.'}
+          {user.role === 'client_admin'
+            ? 'Видите все заказы компании.'
+            : 'Видите свои заказы. Все заказы компании видит руководитель.'}
         </p>
       </Card>
     </div>

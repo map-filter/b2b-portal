@@ -1,4 +1,5 @@
 import { Link, useLocation, useNavigate, useParams } from 'react-router'
+import { download } from '../api/client'
 import { useOrder, useRepeatOrder } from '../api/hooks'
 import { Button, Card, Empty, Spinner, StatusBadge } from '../components/ui'
 import { formatDate, formatDateTime, formatMoney } from '../lib/format'
@@ -27,7 +28,10 @@ export function OrderPage() {
         </Link>
         <h1 className="text-xl font-semibold text-slate-900">Заказ {order.number}</h1>
         <StatusBadge status={order.status} label={order.status_label} />
-        <div className="ml-auto">
+        <div className="ml-auto flex gap-2">
+          <Button variant="secondary" onClick={() => download(`/orders/${order.id}/invoice`, `Счёт ${order.number}.pdf`)}>
+            Счёт PDF
+          </Button>
           <Button
             variant="secondary"
             disabled={repeat.isPending}

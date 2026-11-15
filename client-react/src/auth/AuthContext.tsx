@@ -42,7 +42,5 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     client.removeQueries({ predicate: (query) => query.queryKey[0] !== 'me' })
   }, [client])
 
-  return (
-    <AuthContext.Provider value={{ user: user ?? null, loading: isLoading, login, logout }}>{children}</AuthContext.Provider>
-  )
+  return <AuthContext.Provider value={{ user: user ?? null, loading: isLoading, login, logout }}>{children}</AuthContext.Provider>
 }

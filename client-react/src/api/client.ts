@@ -68,3 +68,13 @@ export async function api<T>(path: string, options: RequestInit & { json?: unkno
 
   return response.json()
 }
+
+export async function download(path: string, filename: string) {
+  const response = await fetch(`/api${path}`, { headers: { Authorization: `Bearer ${tokenStore.get()}` } })
+  if (!response.ok) throw new ApiError(response.status, 'Не удалось скачать файл')
+
+  const url = URL.createObjectURL(await response.blob())
+  const link = Object.assign(document.createElement('a'), { href: url, download: filename })
+  link.click()
+  URL.revokeObjectURL(url)
+}

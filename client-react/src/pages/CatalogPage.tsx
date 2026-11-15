@@ -64,50 +64,56 @@ export function CatalogPage() {
       <aside className={`space-y-6 ${panelOpen ? '' : 'hidden'} lg:block`}>
         <CategoryTree categories={categories} active={filters.category} onSelect={selectCategory} />
 
-        {facets.data && (facets.data.brands.length > 1 || (filters.category !== undefined && Object.keys(facets.data.specs).length > 0)) && (
-          <div className="space-y-5">
-            {facets.data.brands.length > 1 && (
-              <FilterGroup title="Бренд">
-                {facets.data.brands.map((brand) => (
-                  <label key={brand} className="flex items-center gap-2 py-0.5 text-sm text-slate-700">
-                    <input
-                      type="checkbox"
-                      className="rounded accent-brand-600"
-                      checked={filters.brand?.includes(brand) ?? false}
-                      onChange={(event) =>
-                        update((next) => {
-                          const current = next.getAll('brand').filter((value) => value !== brand)
-                          next.delete('brand')
-                          ;(event.target.checked ? [...current, brand] : current).forEach((value) => next.append('brand', value))
-                        })
-                      }
-                    />
-                    {brand}
-                  </label>
-                ))}
-              </FilterGroup>
-            )}
-
-            {filters.category !== undefined && Object.entries(facets.data.specs).map(([name, values]) => (
-              <FilterGroup key={name} title={name}>
-                <select
-                  className="w-full rounded-lg border-0 bg-white px-2 py-1.5 text-sm ring-1 ring-slate-300"
-                  value={filters.specs?.[name] ?? ''}
-                  onChange={(event) =>
-                    update((next) => (event.target.value ? next.set(`spec:${name}`, event.target.value) : next.delete(`spec:${name}`)))
-                  }
-                >
-                  <option value="">Любое</option>
-                  {values.map((value) => (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
+        {facets.data &&
+          (facets.data.brands.length > 1 || (filters.category !== undefined && Object.keys(facets.data.specs).length > 0)) && (
+            <div className="space-y-5">
+              {facets.data.brands.length > 1 && (
+                <FilterGroup title="Бренд">
+                  {facets.data.brands.map((brand) => (
+                    <label key={brand} className="flex items-center gap-2 py-0.5 text-sm text-slate-700">
+                      <input
+                        type="checkbox"
+                        className="rounded accent-brand-600"
+                        checked={filters.brand?.includes(brand) ?? false}
+                        onChange={(event) =>
+                          update((next) => {
+                            const current = next.getAll('brand').filter((value) => value !== brand)
+                            next.delete('brand')
+                            ;(event.target.checked ? [...current, brand] : current).forEach((value) =>
+                              next.append('brand', value),
+                            )
+                          })
+                        }
+                      />
+                      {brand}
+                    </label>
                   ))}
-                </select>
-              </FilterGroup>
-            ))}
-          </div>
-        )}
+                </FilterGroup>
+              )}
+
+              {filters.category !== undefined &&
+                Object.entries(facets.data.specs).map(([name, values]) => (
+                  <FilterGroup key={name} title={name}>
+                    <select
+                      className="w-full rounded-lg border-0 bg-white px-2 py-1.5 text-sm ring-1 ring-slate-300"
+                      value={filters.specs?.[name] ?? ''}
+                      onChange={(event) =>
+                        update((next) =>
+                          event.target.value ? next.set(`spec:${name}`, event.target.value) : next.delete(`spec:${name}`),
+                        )
+                      }
+                    >
+                      <option value="">Любое</option>
+                      {values.map((value) => (
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
+                      ))}
+                    </select>
+                  </FilterGroup>
+                ))}
+            </div>
+          )}
       </aside>
 
       <section className="min-w-0 space-y-4">
@@ -170,7 +176,15 @@ export function CatalogPage() {
   )
 }
 
-function CategoryTree({ categories, active, onSelect }: { categories?: Category[]; active?: number; onSelect: (id?: number) => void }) {
+function CategoryTree({
+  categories,
+  active,
+  onSelect,
+}: {
+  categories?: Category[]
+  active?: number
+  onSelect: (id?: number) => void
+}) {
   const item = (selected: boolean) =>
     `block w-full rounded-md px-2 py-1 text-left text-sm transition ${selected ? 'bg-brand-50 font-medium text-brand-700' : 'text-slate-600 hover:bg-slate-100'}`
 

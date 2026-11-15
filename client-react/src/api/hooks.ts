@@ -100,3 +100,22 @@ export function useRepeatOrder() {
     onSuccess: () => client.invalidateQueries({ queryKey: ['cart'] }),
   })
 }
+
+export interface ImportResult {
+  added: number
+  not_found: { row: number; sku: string }[]
+  invalid: { row: number; reason: string }[]
+}
+
+export function useCartImport() {
+  const client = useQueryClient()
+
+  return useMutation({
+    mutationFn: (file: File) => {
+      const body = new FormData()
+      body.append('file', file)
+      return api<ImportResult>('/cart/import', { method: 'POST', body })
+    },
+    onSuccess: () => client.invalidateQueries({ queryKey: ['cart'] }),
+  })
+}

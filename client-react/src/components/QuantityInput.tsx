@@ -41,7 +41,12 @@ export function QuantityInput({ value, min = 1, step = 1, onChange, className = 
         onBlur={() => commit(Number(draft) || min)}
         onKeyDown={(event) => event.key === 'Enter' && commit(Number(draft) || min)}
       />
-      <button type="button" aria-label="Больше" className="w-8 text-slate-500 hover:bg-slate-100" onClick={() => commit(value + step)}>
+      <button
+        type="button"
+        aria-label="Больше"
+        className="w-8 text-slate-500 hover:bg-slate-100"
+        onClick={() => commit(value + step)}
+      >
         +
       </button>
     </div>

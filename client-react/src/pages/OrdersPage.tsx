@@ -76,7 +76,9 @@ export function OrdersPage() {
                     <StatusBadge status={order.status} label={order.status_label} />
                   </td>
                   <td className="hidden px-4 py-3 text-right text-slate-600 tabular-nums sm:table-cell">{order.items_count}</td>
-                  <td className="px-4 py-3 text-right font-medium whitespace-nowrap text-slate-900 tabular-nums">{formatMoney(order.total)}</td>
+                  <td className="px-4 py-3 text-right font-medium whitespace-nowrap text-slate-900 tabular-nums">
+                    {formatMoney(order.total)}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -84,7 +86,9 @@ export function OrdersPage() {
         )}
       </Card>
 
-      {data && <Pagination page={data.meta.current_page} last={data.meta.last_page} onChange={(next) => set('page', String(next))} />}
+      {data && (
+        <Pagination page={data.meta.current_page} last={data.meta.last_page} onChange={(next) => set('page', String(next))} />
+      )}
     </div>
   )
 }

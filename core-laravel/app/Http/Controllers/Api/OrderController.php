@@ -8,11 +8,14 @@ use App\Http\Requests\PlaceOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Services\Cart\CartService;
+use App\Services\Invoices\InvoiceRenderer;
 use App\Services\Orders\PlaceOrder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class OrderController extends Controller
 {
@@ -56,6 +59,13 @@ class OrderController extends Controller
         Gate::authorize('view', $order);
 
         return new OrderResource($order->load(['items', 'user', 'contract', 'statusHistory.user']));
+    }
+
+    public function invoice(Order $order, InvoiceRenderer $renderer): StreamedResponse
+    {
+        Gate::authorize('view', $order);
+
+        return Storage::download($renderer->ensure($order), "Счёт {$order->number}.pdf", ['Content-Type' => 'application/pdf']);
     }
 
     /**

@@ -82,7 +82,11 @@ export function ProductPage() {
               <QuantityInput value={value} min={product.min_quantity} step={step} onChange={setQuantity} />
               <span className="text-sm text-slate-600 tabular-nums">= {formatMoney(Number(product.price) * value)}</span>
             </div>
-            <Button className="w-full py-2.5" disabled={put.isPending} onClick={() => put.mutate({ productId: product.id, quantity: value })}>
+            <Button
+              className="w-full py-2.5"
+              disabled={put.isPending}
+              onClick={() => put.mutate({ productId: product.id, quantity: value })}
+            >
               {inCart ? 'Обновить в корзине' : 'Добавить в корзину'}
             </Button>
             {inCart && (
