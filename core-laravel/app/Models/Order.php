@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['number', 'company_id', 'user_id', 'contract_id', 'status', 'total', 'comment', 'delivery_address', 'desired_date', 'external_id', 'crm_deal_id'])]
+#[Fillable(['number', 'source', 'company_id', 'user_id', 'contract_id', 'status', 'total', 'comment', 'delivery_address', 'desired_date', 'external_id', 'crm_deal_id'])]
 class Order extends Model
 {
     protected function casts(): array

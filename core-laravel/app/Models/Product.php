@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Kaspi\KaspiProduct;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable(['category_id', 'sku', 'name', 'slug', 'brand', 'description', 'unit', 'min_quantity', 'pack_quantity', 'base_price', 'specs', 'is_active', 'external_id'])]
 class Product extends Model
@@ -44,6 +46,11 @@ class Product extends Model
     public function prices(): HasMany
     {
         return $this->hasMany(ProductPrice::class);
+    }
+
+    public function kaspi(): HasOne
+    {
+        return $this->hasOne(KaspiProduct::class);
     }
 
     public function scopeActive(Builder $query): void

@@ -4,7 +4,7 @@ export GID := $(shell id -g)
 DC = docker compose
 ART = $(DC) exec core php artisan
 
-.PHONY: up down build logs sh migrate fresh test pint go-test samples exchange-demo bot bot-test bot-demo
+.PHONY: up down build logs sh migrate fresh test pint go-test kaspi-test kaspi-sync samples exchange-demo bot bot-test bot-demo
 
 up:
 	$(DC) up -d --build
@@ -25,7 +25,7 @@ migrate:
 	$(ART) migrate
 
 fresh:
-	$(ART) migrate:fresh --seed
+	$(ART) demo:reset
 
 test:
 	$(DC) exec -e APP_ENV=testing -e APP_URL=http://localhost core php artisan test
@@ -35,6 +35,12 @@ pint:
 
 go-test:
 	infra/go.sh vet ./... && infra/go.sh test ./...
+
+kaspi-test:
+	GO_DIR=kaspi-emu infra/go.sh vet ./... && GO_DIR=kaspi-emu infra/go.sh test ./...
+
+kaspi-sync:
+	$(ART) kaspi:sync --force
 
 samples:
 	infra/go.sh run ./cmd/gen -products $(or $(N),2000) -out /repo/infra/1c-samples
@@ -50,4 +56,4 @@ bot-test:
 	docker run --rm -v $(CURDIR)/bot-python:/app -w /app b2b-bot-test python -m pytest -q
 
 bot-demo:
-	docker run --rm -i --network b2b_default --env-file .env -e PORTAL_URL=http://nginx -v $(CURDIR)/bot-python:/app -w /app b2b-bot-test python -m bot.cli --email $(or $(EMAIL),buyer@energomontazh.kz)
+	docker run --rm -i --network $(or $(COMPOSE_PROJECT_NAME),b2b)_default --env-file .env -e PORTAL_URL=http://nginx -v $(CURDIR)/bot-python:/app -w /app b2b-bot-test python -m bot.cli --email $(or $(EMAIL),buyer@energomontazh.kz)

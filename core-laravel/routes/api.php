@@ -7,12 +7,15 @@ use App\Http\Controllers\Api\Catalog\CategoryController;
 use App\Http\Controllers\Api\Catalog\ProductController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\Integration\BotController;
+use App\Http\Controllers\Api\KaspiPriceListController;
 use App\Http\Controllers\Api\Manager;
+use App\Http\Controllers\Api\Manager\Kaspi;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\TelegramLinkController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/health', HealthController::class);
+Route::get('/kaspi/pricelist/{token}.xml', KaspiPriceListController::class)->middleware('throttle:30,1');
 
 Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
 
@@ -62,6 +65,30 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
         Route::get('/companies/{company}/prices', [Manager\ContractPriceController::class, 'index']);
         Route::put('/companies/{company}/prices/{product}', [Manager\ContractPriceController::class, 'upsert']);
         Route::delete('/companies/{company}/prices/{product}', [Manager\ContractPriceController::class, 'destroy']);
+
+        Route::prefix('kaspi')->group(function () {
+            Route::get('/dashboard', Kaspi\KaspiReportController::class);
+            Route::get('/orders', [Kaspi\KaspiOrderController::class, 'index']);
+            Route::get('/cancel-reasons', [Kaspi\KaspiOrderController::class, 'reasons']);
+            Route::get('/orders/{order}', [Kaspi\KaspiOrderController::class, 'show']);
+            Route::post('/orders/{order}/accept', [Kaspi\KaspiOrderController::class, 'accept']);
+            Route::post('/orders/{order}/assemble', [Kaspi\KaspiOrderController::class, 'assemble']);
+            Route::post('/orders/{order}/send-code', [Kaspi\KaspiOrderController::class, 'sendCode']);
+            Route::post('/orders/{order}/complete', [Kaspi\KaspiOrderController::class, 'complete']);
+            Route::post('/orders/{order}/cancel', [Kaspi\KaspiOrderController::class, 'cancel']);
+            Route::get('/orders/{order}/waybill', [Kaspi\KaspiOrderController::class, 'waybill']);
+
+            Route::get('/products', [Kaspi\KaspiProductController::class, 'index']);
+            Route::post('/products', [Kaspi\KaspiProductController::class, 'store']);
+            Route::get('/products/template', [Kaspi\KaspiProductController::class, 'template']);
+            Route::post('/products/import', [Kaspi\KaspiProductController::class, 'import']);
+            Route::patch('/products/{kaspiProduct}', [Kaspi\KaspiProductController::class, 'update']);
+            Route::delete('/products/{kaspiProduct}', [Kaspi\KaspiProductController::class, 'destroy']);
+
+            Route::get('/settings', [Kaspi\KaspiSettingsController::class, 'show']);
+            Route::put('/settings', [Kaspi\KaspiSettingsController::class, 'update']);
+            Route::post('/sync', [Kaspi\KaspiSettingsController::class, 'sync']);
+        });
     });
 });
 

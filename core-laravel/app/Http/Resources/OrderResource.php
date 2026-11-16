@@ -14,11 +14,12 @@ class OrderResource extends JsonResource
         return [
             'id' => $this->id,
             'number' => $this->number,
+            'source' => $this->source ?? 'portal',
             'status' => $this->status->value,
             'status_label' => $this->status->label(),
             'next_statuses' => $this->when($request->user()?->isStaff(), fn () => array_map(
                 fn ($status) => ['value' => $status->value, 'label' => $status->label()],
-                $this->status->next(),
+                $this->source === 'kaspi' ? [] : $this->status->next(),
             )),
             'total' => $this->total,
             'items_count' => $this->items_count ?? $this->whenLoaded('items', fn () => $this->items->count()),

@@ -7,3 +7,8 @@ Schedule::command('demo:reset')
     ->timezone('Asia/Almaty')
     ->when(fn () => config('app.demo_reset'))
     ->withoutOverlapping();
+
+Schedule::command('kaspi:sync')
+    ->everyMinute()
+    ->withoutOverlapping()
+    ->runInBackground();

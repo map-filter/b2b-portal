@@ -7,7 +7,7 @@ x-core: &core
     args:
       UID: ${UID:-1000}
       GID: ${GID:-1000}
-  image: b2b-core:dev
+  image: ${IMAGE_PREFIX:-b2b}-core:dev
   environment:
     APP_ENV: ${APP_ENV:-local}
     APP_DEBUG: ${APP_DEBUG:-true}
@@ -17,6 +17,10 @@ x-core: &core
     TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
     TELEGRAM_BOT_USERNAME: ${TELEGRAM_BOT_USERNAME:-}
     B24_WEBHOOK_URL: ${B24_WEBHOOK_URL:-}
+    KASPI_API_URL: ${KASPI_API_URL:-http://kaspi-emu:8080/shop/api}
+    KASPI_API_TOKEN: ${KASPI_API_TOKEN:-demo-kaspi-token}
+    KASPI_PRICELIST_TOKEN: ${KASPI_PRICELIST_TOKEN:-demo-pricelist}
+    KASPI_MODE: ${KASPI_MODE:-one_c}
   volumes:
     - ./core-laravel:/var/www/core
   depends_on:
@@ -62,6 +66,8 @@ services:
     command: sh -c "npm install --no-audit --no-fund && npm run dev -- --host 0.0.0.0 --port 5173"
     volumes:
       - ./client-react:/app
+    environment:
+      VITE_HMR_PORT: ${PORT_GATEWAY:-8201}
     ports:
       - "127.0.0.1:${PORT_CLIENT:-8202}:5173"
 
@@ -72,6 +78,8 @@ services:
     command: sh -c "npm install --no-audit --no-fund && npm run dev -- --host 0.0.0.0 --port 5173"
     volumes:
       - ./manager-vue:/app
+    environment:
+      VITE_HMR_PORT: ${PORT_GATEWAY:-8201}
     ports:
       - "127.0.0.1:${PORT_MANAGER:-8203}:5173"
 
@@ -82,7 +90,7 @@ services:
       dockerfile: infra/web/Dockerfile
       args:
         VITE_APP_BASE: ${PUBLIC_BASE:-/}
-    image: b2b-web:demo
+    image: ${IMAGE_PREFIX:-b2b}-web:demo
     volumes:
       - ./core-laravel/public:/var/www/core/public:ro
     ports:
@@ -128,7 +136,7 @@ services:
 
   exchange:
     build: ./exchange-go
-    image: b2b-exchange:dev
+    image: ${IMAGE_PREFIX:-b2b}-exchange:dev
     environment:
       RABBITMQ_URL: amqp://b2b:b2b@rabbitmq:5672/
       EXCHANGE_LOGIN: ${EXCHANGE_LOGIN:-1c}
@@ -143,10 +151,24 @@ services:
       rabbitmq:
         condition: service_healthy
 
+  kaspi-emu:
+    build: ./kaspi-emu
+    image: ${IMAGE_PREFIX:-b2b}-kaspi-emu:dev
+    environment:
+      KASPI_EMU_TOKEN: ${KASPI_API_TOKEN:-demo-kaspi-token}
+      KASPI_EMU_PUBLIC_URL: http://kaspi-emu:8080
+      KASPI_EMU_PRICELIST_URL: ${KASPI_EMU_PRICELIST_URL:-http://nginx/api/kaspi/pricelist/${KASPI_PRICELIST_TOKEN:-demo-pricelist}.xml}
+      KASPI_EMU_NEW_ORDER_EVERY: ${KASPI_EMU_NEW_ORDER_EVERY:-4m}
+    volumes:
+      - kaspi-data:/data
+    ports:
+      - "127.0.0.1:${PORT_KASPI:-8209}:8080"
+    restart: unless-stopped
+
   bot:
     profiles: [bot]
     build: ./bot-python
-    image: b2b-bot:dev
+    image: ${IMAGE_PREFIX:-b2b}-bot:dev
     environment:
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
       INTEGRATION_TOKEN: ${INTEGRATION_TOKEN}
@@ -164,3 +186,4 @@ services:
 volumes:
   pgdata:
   exchange-data:
+  kaspi-data:
