@@ -77,7 +77,6 @@ async function logout() {
       </div>
     </aside>
 
-    <div class="bg-amber-50 px-4 py-1 text-center text-xs text-amber-800">Демо-версия: компании, товары и цены выдуманы</div>
     <main class="mx-auto max-w-7xl px-4 py-6 lg:px-8">
       <RouterView />
     </main>

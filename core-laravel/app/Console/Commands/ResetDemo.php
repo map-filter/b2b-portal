@@ -8,14 +8,14 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
 #[Signature('demo:reset')]
-#[Description('Возвращает демо-данные в исходное состояние')]
+#[Description('Возвращает данные в исходное состояние')]
 class ResetDemo extends Command
 {
     public function handle(): int
     {
         $this->call('migrate:fresh', ['--seed' => true, '--force' => true]);
         Storage::deleteDirectory('invoices');
-        $this->info('Демо сброшено');
+        $this->info('Данные сброшены');
 
         return self::SUCCESS;
     }

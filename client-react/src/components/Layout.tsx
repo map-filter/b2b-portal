@@ -12,9 +12,6 @@ export function Layout() {
 
   return (
     <div className="min-h-screen">
-      <div className="bg-amber-50 px-4 py-1 text-center text-xs text-amber-800">
-        Демо-версия: компании, товары и цены выдуманы
-      </div>
       <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-1 px-4 py-2 md:h-16 md:flex-nowrap md:py-0">
           <NavLink to="/" className="flex items-center gap-2 font-semibold text-slate-900">

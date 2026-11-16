@@ -14,13 +14,11 @@
         .num { text-align: right; white-space: nowrap; }
         .muted { color: #64748b; }
         .totals td { padding: 2px 5px; }
-        .demo { background: #fef3c7; color: #92400e; padding: 4px 8px; text-align: center; font-size: 9px; }
         .sign { margin-top: 30px; }
         .sign td { padding-top: 18px; }
     </style>
 </head>
 <body>
-    <div class="demo">Демо-документ, реквизиты выдуманы</div>
 
     <table class="bank" style="margin-top: 10px;">
         <tr>
@@ -80,8 +78,8 @@
 
     <table class="sign">
         <tr>
-            <td style="width: 50%;">Исполнитель ____________________ /Демо И.И./</td>
-            <td>Главный бухгалтер ____________________ /Демо Б.Б./</td>
+            <td style="width: 50%;">Исполнитель ____________________ /Нуржанов А.С./</td>
+            <td>Главный бухгалтер ____________________ /Ким Е.В./</td>
         </tr>
     </table>
 </body>

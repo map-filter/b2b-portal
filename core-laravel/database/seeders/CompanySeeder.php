@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 
 class CompanySeeder extends Seeder
 {
-    public const PASSWORD = 'demo12345';
+    public const PASSWORD = 'portal2026';
 
     public function run(PriceResolver $prices, OrderNumberGenerator $numbers): void
     {
@@ -26,14 +26,14 @@ class CompanySeeder extends Seeder
 
         User::create([
             'role' => UserRole::Admin,
-            'name' => 'Администратор (демо)',
-            'email' => 'admin@demo.kz',
+            'name' => 'Администратор',
+            'email' => 'admin@electroopt.kz',
             'password' => self::PASSWORD,
         ]);
 
         $managers = collect([
-            ['name' => 'Айгерим Сапарова (демо)', 'email' => 'manager@demo.kz', 'phone' => '+7 700 000 00 01'],
-            ['name' => 'Олег Ким (демо)', 'email' => 'manager2@demo.kz', 'phone' => '+7 700 000 00 02'],
+            ['name' => 'Айгерим Сапарова', 'email' => 'manager@electroopt.kz', 'phone' => '+7 700 000 00 01'],
+            ['name' => 'Олег Ким', 'email' => 'manager2@electroopt.kz', 'phone' => '+7 700 000 00 02'],
         ])->map(fn (array $row) => User::create($row + ['role' => UserRole::Manager, 'password' => self::PASSWORD]));
 
         $types = PriceType::all()->keyBy('code');
@@ -46,7 +46,7 @@ class CompanySeeder extends Seeder
                 'bin' => sprintf('2611%08d', $index + 1),
                 'legal_address' => $row['address'],
                 'phone' => sprintf('+7 718 200 %02d %02d', $index, $index + 10),
-                'email' => "info@{$row['slug']}.demo",
+                'email' => "info@{$row['slug']}.kz",
                 'manager_id' => $managers[$index % 2]->id,
                 'credit_limit' => $row['limit'],
                 'payment_delay_days' => $row['delay'],
@@ -77,7 +77,7 @@ class CompanySeeder extends Seeder
                 'company_id' => $company->id,
                 'role' => UserRole::ClientAdmin,
                 'name' => $row['director'],
-                'email' => "director@{$row['slug']}.demo",
+                'email' => "director@{$row['slug']}.kz",
                 'password' => self::PASSWORD,
             ]);
 
@@ -85,7 +85,7 @@ class CompanySeeder extends Seeder
                 'company_id' => $company->id,
                 'role' => UserRole::ClientBuyer,
                 'name' => $row['buyer'],
-                'email' => "buyer@{$row['slug']}.demo",
+                'email' => "buyer@{$row['slug']}.kz",
                 'password' => self::PASSWORD,
             ]);
 
@@ -167,14 +167,14 @@ class CompanySeeder extends Seeder
     private function companies(): array
     {
         return [
-            ['name' => 'ЭнергоМонтаж Павлодар', 'slug' => 'energomontazh', 'address' => 'г. Павлодар, ул. Демо-Ломова, 10', 'price_type' => 'large_wholesale', 'discount' => 3, 'limit' => 5000000, 'delay' => 30, 'special' => true, 'director' => 'Ерлан Жумабаев', 'buyer' => 'Анна Петрова'],
-            ['name' => 'СтройЭлектро', 'slug' => 'stroyelectro', 'address' => 'г. Астана, пр. Демо-Абая, 22', 'price_type' => 'wholesale', 'discount' => 5, 'limit' => 2000000, 'delay' => 14, 'special' => false, 'director' => 'Марат Сейткали', 'buyer' => 'Дина Абенова'],
-            ['name' => 'Иртыш Электрик', 'slug' => 'irtysh', 'address' => 'г. Павлодар, ул. Демо-Торайгырова, 5', 'price_type' => 'wholesale', 'discount' => 0, 'limit' => 1000000, 'delay' => 7, 'special' => false, 'director' => 'Сергей Иванов', 'buyer' => 'Мадина Оспанова'],
-            ['name' => 'Северный Ток', 'slug' => 'severtok', 'address' => 'г. Петропавловск, ул. Демо-Конституции, 3', 'price_type' => 'wholesale', 'discount' => 2, 'limit' => 1500000, 'delay' => 14, 'special' => false, 'director' => 'Андрей Ли', 'buyer' => 'Ольга Смирнова'],
-            ['name' => 'ТехноСвет Астана', 'slug' => 'technosvet', 'address' => 'г. Астана, ул. Демо-Кенесары, 40', 'price_type' => 'large_wholesale', 'discount' => 0, 'limit' => 3000000, 'delay' => 30, 'special' => true, 'director' => 'Нурлан Каримов', 'buyer' => 'Алия Мухамеджанова'],
-            ['name' => 'ДомСтрой Сервис', 'slug' => 'domstroy', 'address' => 'г. Экибастуз, ул. Демо-Энергетиков, 12', 'price_type' => 'retail', 'discount' => 7, 'limit' => 0, 'delay' => 0, 'special' => false, 'director' => 'Виктор Ткаченко', 'buyer' => 'Жанна Бекова'],
-            ['name' => 'Альфа Монтаж', 'slug' => 'alfamontazh', 'address' => 'г. Алматы, ул. Демо-Розыбакиева, 88', 'price_type' => 'wholesale', 'discount' => 4, 'limit' => 2500000, 'delay' => 14, 'special' => false, 'director' => 'Тимур Алиев', 'buyer' => 'Екатерина Волкова'],
-            ['name' => 'ПромЭлектроСнаб', 'slug' => 'promelectro', 'address' => 'г. Караганда, ул. Демо-Бухар-Жырау, 51', 'price_type' => 'large_wholesale', 'discount' => 5, 'limit' => 8000000, 'delay' => 45, 'special' => true, 'director' => 'Асхат Нургалиев', 'buyer' => 'Ирина Кузнецова'],
+            ['name' => 'ЭнергоМонтаж Павлодар', 'slug' => 'energomontazh', 'address' => 'г. Павлодар, ул. Ломова, 10', 'price_type' => 'large_wholesale', 'discount' => 3, 'limit' => 5000000, 'delay' => 30, 'special' => true, 'director' => 'Ерлан Жумабаев', 'buyer' => 'Анна Петрова'],
+            ['name' => 'СтройЭлектро', 'slug' => 'stroyelectro', 'address' => 'г. Астана, пр. Абая, 22', 'price_type' => 'wholesale', 'discount' => 5, 'limit' => 2000000, 'delay' => 14, 'special' => false, 'director' => 'Марат Сейткали', 'buyer' => 'Дина Абенова'],
+            ['name' => 'Иртыш Электрик', 'slug' => 'irtysh', 'address' => 'г. Павлодар, ул. Торайгырова, 5', 'price_type' => 'wholesale', 'discount' => 0, 'limit' => 1000000, 'delay' => 7, 'special' => false, 'director' => 'Сергей Иванов', 'buyer' => 'Мадина Оспанова'],
+            ['name' => 'Северный Ток', 'slug' => 'severtok', 'address' => 'г. Петропавловск, ул. Конституции, 3', 'price_type' => 'wholesale', 'discount' => 2, 'limit' => 1500000, 'delay' => 14, 'special' => false, 'director' => 'Андрей Ли', 'buyer' => 'Ольга Смирнова'],
+            ['name' => 'ТехноСвет Астана', 'slug' => 'technosvet', 'address' => 'г. Астана, ул. Кенесары, 40', 'price_type' => 'large_wholesale', 'discount' => 0, 'limit' => 3000000, 'delay' => 30, 'special' => true, 'director' => 'Нурлан Каримов', 'buyer' => 'Алия Мухамеджанова'],
+            ['name' => 'ДомСтрой Сервис', 'slug' => 'domstroy', 'address' => 'г. Экибастуз, ул. Энергетиков, 12', 'price_type' => 'retail', 'discount' => 7, 'limit' => 0, 'delay' => 0, 'special' => false, 'director' => 'Виктор Ткаченко', 'buyer' => 'Жанна Бекова'],
+            ['name' => 'Альфа Монтаж', 'slug' => 'alfamontazh', 'address' => 'г. Алматы, ул. Розыбакиева, 88', 'price_type' => 'wholesale', 'discount' => 4, 'limit' => 2500000, 'delay' => 14, 'special' => false, 'director' => 'Тимур Алиев', 'buyer' => 'Екатерина Волкова'],
+            ['name' => 'ПромЭлектроСнаб', 'slug' => 'promelectro', 'address' => 'г. Караганда, ул. Бухар-Жырау, 51', 'price_type' => 'large_wholesale', 'discount' => 5, 'limit' => 8000000, 'delay' => 45, 'special' => true, 'director' => 'Асхат Нургалиев', 'buyer' => 'Ирина Кузнецова'],
         ];
     }
 }

@@ -20,7 +20,7 @@ async def run(email: str, text: str | None, image: Path | None) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Заявка в корзину без Telegram: для демо и отладки")
+    parser = argparse.ArgumentParser(description="Заявка в корзину без Telegram: для отладки")
     parser.add_argument("--email", required=True, help="пользователь клиента, в чью корзину класть")
     parser.add_argument("--image", type=Path, help="фото заявки (нужен ключ Anthropic)")
     parser.add_argument("text", nargs="?", help="текст заявки, по умолчанию читается из stdin")

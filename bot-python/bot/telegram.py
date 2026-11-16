@@ -42,7 +42,7 @@ async def start(message: Message, portal: PortalClient) -> None:
     if user:
         await message.answer(f"Здравствуйте, {escape(user['name'])}!\n\n{HELP}")
     else:
-        await message.answer("Это бот B2B-портала ЭлектроОпт (демо). Привяжите Telegram в кабинете: «Компания» → «Подключить Telegram».")
+        await message.answer("Это бот B2B-портала ЭлектроОпт. Привяжите Telegram в кабинете: «Компания» → «Подключить Telegram».")
 
 
 @router.message(Command("help"))

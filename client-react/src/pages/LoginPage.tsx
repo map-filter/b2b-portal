@@ -4,17 +4,17 @@ import { ApiError } from '../api/client'
 import { useAuth } from '../auth/context'
 import { Button } from '../components/ui'
 
-const demoAccounts = [
-  { email: 'buyer@energomontazh.demo', label: 'Закупщик, ЭнергоМонтаж (крупный опт)' },
-  { email: 'director@energomontazh.demo', label: 'Руководитель, ЭнергоМонтаж' },
-  { email: 'buyer@domstroy.demo', label: 'Закупщик, ДомСтрой (розница −7%)' },
+const accounts = [
+  { email: 'buyer@energomontazh.kz', label: 'Закупщик, ЭнергоМонтаж (крупный опт)' },
+  { email: 'director@energomontazh.kz', label: 'Руководитель, ЭнергоМонтаж' },
+  { email: 'buyer@domstroy.kz', label: 'Закупщик, ДомСтрой (розница −7%)' },
 ]
 
 export function LoginPage() {
   const { user, login } = useAuth()
   const navigate = useNavigate()
-  const [email, setEmail] = useState(demoAccounts[0].email)
-  const [password, setPassword] = useState('demo12345')
+  const [email, setEmail] = useState(accounts[0].email)
+  const [password, setPassword] = useState('portal2026')
   const [error, setError] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
 
@@ -76,9 +76,9 @@ export function LoginPage() {
         </form>
 
         <div className="mt-6 rounded-2xl border border-dashed border-slate-300 p-4">
-          <p className="mb-2 text-xs font-medium tracking-wide text-slate-500 uppercase">Демо-доступ, пароль demo12345</p>
+          <p className="mb-2 text-xs font-medium tracking-wide text-slate-500 uppercase">Тестовые входы, пароль portal2026</p>
           <div className="space-y-1">
-            {demoAccounts.map((account) => (
+            {accounts.map((account) => (
               <button
                 key={account.email}
                 type="button"

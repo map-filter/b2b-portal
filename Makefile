@@ -28,7 +28,7 @@ fresh:
 	$(ART) migrate:fresh --seed
 
 test:
-	$(DC) exec core php artisan test
+	$(DC) exec -e APP_ENV=testing -e APP_URL=http://localhost core php artisan test
 
 pint:
 	$(DC) exec core ./vendor/bin/pint
@@ -50,4 +50,4 @@ bot-test:
 	docker run --rm -v $(CURDIR)/bot-python:/app -w /app b2b-bot-test python -m pytest -q
 
 bot-demo:
-	docker run --rm -i --network b2b_default --env-file .env -e PORTAL_URL=http://nginx -v $(CURDIR)/bot-python:/app -w /app b2b-bot-test python -m bot.cli --email $(or $(EMAIL),buyer@energomontazh.demo)
+	docker run --rm -i --network b2b_default --env-file .env -e PORTAL_URL=http://nginx -v $(CURDIR)/bot-python:/app -w /app b2b-bot-test python -m bot.cli --email $(or $(EMAIL),buyer@energomontazh.kz)

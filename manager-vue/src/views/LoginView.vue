@@ -6,8 +6,8 @@ import { useAuthStore } from '../stores/auth'
 
 const auth = useAuthStore()
 const router = useRouter()
-const email = ref('manager@demo.kz')
-const password = ref('demo12345')
+const email = ref('manager@electroopt.kz')
+const password = ref('portal2026')
 const error = ref<string | null>(null)
 const pending = ref(false)
 
@@ -44,7 +44,9 @@ async function submit() {
         </label>
         <p v-if="error" class="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{{ error }}</p>
         <button class="btn btn-primary w-full py-2.5" :disabled="pending">{{ pending ? 'Входим…' : 'Войти' }}</button>
-        <p class="text-center text-xs text-slate-500">Демо: manager@demo.kz или admin@demo.kz, пароль demo12345</p>
+        <p class="text-center text-xs text-slate-500">
+          Тестовый вход: manager@electroopt.kz или admin@electroopt.kz, пароль portal2026
+        </p>
       </form>
     </div>
   </div>
