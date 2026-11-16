@@ -4,9 +4,32 @@
 
 Плюс модуль **Kaspi Магазин**: заказы с Kaspi.kz принимаются, собираются и выдаются из панели, уходят в 1С тем же обменом, остатки и цены уезжают в Kaspi прайс-листом. Работает и без 1С: тогда остатки ведутся прямо в панели. Подробности в разделе [Kaspi Магазин](#kaspi-магазин).
 
-**Посмотреть онлайн:** [кабинет клиента](https://nitro.tailf772e4.ts.net/b2b/) · [панель менеджера](https://nitro.tailf772e4.ts.net/b2b/manager/) · [API](https://nitro.tailf772e4.ts.net/b2b/docs/api). Вход прямо на странице, пароль `portal2026`, данные сбрасываются каждую ночь.
+Все компании, товары, бренды и реквизиты выдуманы. Живую версию включаю по запросу, локально всё поднимается одной командой (см. [Запуск](#запуск)).
 
-Все компании, товары, бренды и реквизиты выдуманы.
+## Скриншоты
+
+**Кабинет клиента**
+
+| | |
+|---|---|
+| ![Каталог](docs/screenshots/02-client-catalog.png) Каталог: цены договора, фильтры, остатки | ![Корзина](docs/screenshots/03-client-cart.png) Корзина и заказ из Excel |
+| ![Заказ](docs/screenshots/05-client-order.png) Заказ: история статусов, счёт, повтор | ![Счёт](docs/screenshots/18-invoice.png) PDF-счёт с НДС |
+| ![Заказы](docs/screenshots/04-client-orders.png) История заказов | ![Телефон](docs/screenshots/17-client-mobile.png) С телефона |
+
+**Панель менеджера**
+
+| | |
+|---|---|
+| ![Сводка](docs/screenshots/06-manager-dashboard.png) Сводка: выручка, статусы, топы | ![Заказы](docs/screenshots/07-manager-orders.png) Заказы и смена статусов |
+| ![Клиент](docs/screenshots/09-manager-company.png) Клиент: договор, лимит, индивидуальные цены | ![Обмен с 1С](docs/screenshots/10-manager-1c-exchange.png) Обмен с 1С: 20 000 товаров, разбор в Go за 0,6-0,7 с |
+
+**Kaspi Магазин**
+
+| | |
+|---|---|
+| ![Продажи Kaspi](docs/screenshots/11-kaspi-sales.png) Продажи на Kaspi | ![Заказы Kaspi](docs/screenshots/12-kaspi-orders.png) Заказы по разделам кабинета Kaspi |
+| ![Заказ Kaspi](docs/screenshots/13-kaspi-order.png) Заказ: принять, накладная, выдача по коду | ![Товары Kaspi](docs/screenshots/14-kaspi-products.png) Товары, остатки, прайс-лист |
+| ![Эмулятор](docs/screenshots/15-kaspi-emulator.png) Эмулятор Kaspi Shop API | ![API](docs/screenshots/16-api-docs.png) Документация API (OpenAPI) |
 
 ## Архитектура
 
