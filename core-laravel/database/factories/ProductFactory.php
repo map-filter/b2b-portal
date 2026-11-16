@@ -18,7 +18,7 @@ class ProductFactory extends Factory
 
         return [
             'category_id' => Category::factory(),
-            'sku' => fake()->unique()->bothify('DEMO-####-??'),
+            'sku' => fake()->unique()->bothify('EO-####-??'),
             'name' => $name,
             'slug' => Str::slug($name).'-'.fake()->unique()->numberBetween(1, 999999),
             'brand' => fake()->randomElement(['ВольтПро', 'Светоч', 'КабельСтандарт']),

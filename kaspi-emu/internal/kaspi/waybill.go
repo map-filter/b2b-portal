@@ -9,7 +9,7 @@ import (
 
 func WaybillPDF(o Order) []byte {
 	lines := []string{
-		"KASPI DELIVERY - WAYBILL (EMULATOR, DEMO)",
+		"KASPI DELIVERY - WAYBILL (EMULATOR)",
 		"",
 		"Waybill: " + o.WaybillNumber,
 		"Order: " + o.Code,

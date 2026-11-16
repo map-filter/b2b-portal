@@ -142,7 +142,7 @@ func TestSaleQueryReturnsOrdersAndConfirms(t *testing.T) {
 		CreatedAt: time.Date(2026, 11, 15, 6, 3, 0, 0, time.UTC),
 		Total:     "1500.00",
 		Company:   commerceml.OrderClient{Name: "Клиент", BIN: "123456789012"},
-		Items:     []commerceml.OrderLine{{SKU: "DEMO-1", Name: "Товар", Unit: "шт", Quantity: 3, Price: "500.00", Total: "1500.00"}},
+		Items:     []commerceml.OrderLine{{SKU: "EO-1", Name: "Товар", Unit: "шт", Quantity: 3, Price: "500.00", Total: "1500.00"}},
 	}}}
 	c, _ := newClient(t, orders)
 	c.handler.cfg.Location = time.FixedZone("Asia/Almaty", 5*3600)

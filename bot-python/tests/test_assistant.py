@@ -23,8 +23,8 @@ async def test_assistant_matches_and_fills_cart_respecting_min_quantity():
             assert body["lines"] == [{"query": "ВВГнг 3х2,5", "quantity": 50.0}, {"query": "что-то странное", "quantity": 1}]
             return httpx.Response(200, json={"data": [
                 {"query": "ВВГнг 3х2,5", "quantity": 50, "candidates": [
-                    {"product_id": 7, "sku": "DEMO-1003", "name": "Кабель ВВГнг 3x2.5", "unit": "м", "min_quantity": 100, "price": "496.64", "stock": 900, "score": 1.02},
-                    {"product_id": 8, "sku": "DEMO-1010", "name": "Кабель ВВГ 3x2.5", "unit": "м", "min_quantity": 100, "price": "422.14", "stock": 0, "score": 0.51},
+                    {"product_id": 7, "sku": "EO-1003", "name": "Кабель ВВГнг 3x2.5", "unit": "м", "min_quantity": 100, "price": "496.64", "stock": 900, "score": 1.02},
+                    {"product_id": 8, "sku": "EO-1010", "name": "Кабель ВВГ 3x2.5", "unit": "м", "min_quantity": 100, "price": "422.14", "stock": 0, "score": 0.51},
                 ]},
                 {"query": "что-то странное", "quantity": 1, "candidates": []},
             ]})

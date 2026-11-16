@@ -13,14 +13,14 @@ import (
 const samplePriceList = `<?xml version="1.0" encoding="utf-8"?>
 <kaspi_catalog date="string" xmlns="kaspiShopping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <company>ЭлектроОпт</company>
-  <merchantid>DEMO01</merchantid>
+  <merchantid>ELOPT01</merchantid>
   <offers>
-    <offer sku="DEMO-1001"><model>Кабель ВВГнг 3х2,5</model><brand>Кабэкс</brand>
+    <offer sku="EO-1001"><model>Кабель ВВГнг 3х2,5</model><brand>Кабэкс</brand>
       <availabilities><availability available="yes" storeId="PP1" stockCount="40"/></availabilities><price>890</price></offer>
-    <offer sku="DEMO-1002"><model>Автомат 1P 16А</model><brand>IEK</brand>
+    <offer sku="EO-1002"><model>Автомат 1P 16А</model><brand>IEK</brand>
       <availabilities><availability available="yes" storeId="PP1" stockCount="12"/></availabilities>
       <cityprices><cityprice cityId="551010000">2450</cityprice></cityprices></offer>
-    <offer sku="DEMO-1003"><model>Розетка двойная</model><brand>Schneider</brand>
+    <offer sku="EO-1003"><model>Розетка двойная</model><brand>Schneider</brand>
       <availabilities><availability available="no" storeId="PP1"/></availabilities><price>1500</price></offer>
   </offers>
 </kaspi_catalog>`
@@ -155,7 +155,7 @@ func TestEntriesLeadToMerchantSku(t *testing.T) {
 	if sku != o.Entries[0].SKU {
 		t.Fatalf("ждали sku %s, получили %v", o.Entries[0].SKU, sku)
 	}
-	if strings.HasPrefix(o.Entries[0].SKU, "DEMO-1003") {
+	if strings.HasPrefix(o.Entries[0].SKU, "EO-1003") {
 		t.Fatal("заказан товар, которого нет в наличии")
 	}
 }

@@ -98,7 +98,7 @@ class CatalogSeeder extends Seeder
      */
     private function product(Category $category, array $item): Product
     {
-        $sku = 'DEMO-'.(++$this->skuCounter);
+        $sku = 'EO-'.(++$this->skuCounter);
 
         return Product::create([
             'category_id' => $category->id,

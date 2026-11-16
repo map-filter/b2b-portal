@@ -17,11 +17,11 @@ class ImportAndInvoiceTest extends ApiTestCase
 {
     public function test_csv_import_adds_known_skus_and_reports_problems(): void
     {
-        $this->product(['sku' => 'DEMO-1']);
-        $this->product(['sku' => 'DEMO-2']);
+        $this->product(['sku' => 'EO-1']);
+        $this->product(['sku' => 'EO-2']);
         Sanctum::actingAs($this->buyer());
 
-        $csv = "Артикул;Количество\ndemo-1;5\nDEMO-1;3\nNOPE;1\nDEMO-2;abc\n";
+        $csv = "Артикул;Количество\neo-1;5\nEO-1;3\nNOPE;1\nEO-2;abc\n";
         $file = UploadedFile::fake()->createWithContent('order.csv', $csv);
 
         $this->post('/api/cart/import', ['file' => $file], ['Accept' => 'application/json'])

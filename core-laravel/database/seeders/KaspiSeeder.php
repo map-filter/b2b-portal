@@ -22,7 +22,7 @@ class KaspiSeeder extends Seeder
 
         KaspiSettings::current()->update([
             'mode' => config('services.kaspi.mode', KaspiMode::OneC->value),
-            'merchant_id' => 'DEMO01',
+            'merchant_id' => 'ELOPT01',
             'company_name' => 'ЭлектроОпт',
             'price_type_id' => null,
             'notify_user_id' => User::where('email', 'manager@electroopt.kz')->value('id'),
